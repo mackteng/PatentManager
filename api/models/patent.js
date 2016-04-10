@@ -20,7 +20,7 @@ var patentSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	type: {
+	applicationType: {
 		type: String,
 		required: true
 	},
@@ -50,9 +50,9 @@ var patentSchema = new mongoose.Schema({
 // set compound index for clientID and clientDocketNumber
 patentSchema.index({"clientID" : 1, "clientDocketNumber" : 1}, {unique: true});
 
-// set virtual geter for full docket 
+// set virtual getter for full docket 
 patentSchema.virtual('FullDocketNumber').get(function(){
 	return this.clientId + '.' + this.clientDocketNumber;
 });
 	
-module.exports = mongoose.model('Patent', patentSchema);
+mongoose.model('Patent', patentSchema);
