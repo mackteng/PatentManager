@@ -8,7 +8,6 @@ var sendJsonResponse = function(res, payload, status){
 	res.json(payload);
 }
 
-
 // TODO: implement filtering
 
 module.exports.listAllPatents = function(req, res){
@@ -28,7 +27,7 @@ module.exports.listAllPatents = function(req, res){
 module.exports.listOnePatent = function(req, res){
 	
 	// find patent by patent id
-	if(req.params && req.params.patentid){
+	if(req.params && req.params.patentid && mongoose.Types.ObjectId.isValid(req.params.patentid)){
 		Patent
 			.findById(req.params.patentid)
 			.exec(function(err, patent){
@@ -42,13 +41,12 @@ module.exports.listOnePatent = function(req, res){
 				}
 			});
 	} else {
-		sendJsonResponse(res, "no patentid found", 404);	
+		sendJsonResponse(res, "Invalid/NonExistent patentId", 404);	
 	}
 };
 
 module.exports.createPatent = function(req, res){
 	
-	// TODO: Custom validator for client id
 	Patent.create({
 		clientId: req.body.clientid,
 		clientDocketNumber: req.body.clientdocketnumber,

@@ -3,14 +3,32 @@ var Priority = require('./priority.js');
 var Inventor = require('./inventor.js');
 var Event = require('./event.js');
 
+
+var clientExistsValidator = function(clientId, response){
+	
+    this.model('Client')
+        .findById(clientId)
+        .exec(function(err, client){
+            if(err || !client) {
+				console.log('Invalid client');
+				response(false);
+			}
+            else
+				response(true);
+        });
+}
+
+
 // define schema for patent application
 var patentSchema = new mongoose.Schema({
 	
 	// clientID holds the reference to the client this patent application belongs to
+	// Use custom validator to mimic foreign key constraint
 	clientId :	{ 
 		type: Number, 
 		ref: 'Client' ,
-		required : true
+		required : true,
+		validate: clientExistsValidator
 	},
 	clientDocketNumber: {
 		type: Number,
