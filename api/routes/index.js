@@ -17,7 +17,7 @@ router.delete('/patents/:patentid', patentController.deletePatent);
 // define api routes for client
 router.get('/clients', clientController.listAllClients);
 router.post('/clients', clientController.createClient);
-router.put('/clients', clientController.updateClient);
+router.post('/clients/contacts', clientController.addContact);
 router.delete('/clients', clientController.deleteClient);
 
 
