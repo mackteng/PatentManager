@@ -48,18 +48,18 @@ module.exports.listOnePatent = function(req, res){
 module.exports.createPatent = function(req, res){
 	
 	Patent.create({
-		clientId: req.body.clientid,
-		clientDocketNumber: req.body.clientdocketnumber,
+		clientId: req.body.clientId,
+		clientDocketNumber: req.body.clientDocketNumber,
 		country: req.body.country,
-		applicationType: req.body.applicationtype,
-		filingDate: req.body.filingdate,
-		filingNumber: req.body.filingnumber,
-		englishTitle: req.body.englishtitle,
-		chineseTitle: req.body.chinesetitle,
+		applicationType: req.body.applicationType,
+		filingDate: req.body.filingDate,
+		filingNumber: req.body.filingNumber,
+		englishTitle: req.body.englishTitle,
+		chineseTitle: req.body.chineseTitle,
 		priority: {
-			priorityCountry: req.body.prioritycountry,
-			priorityFilingNumber: req.body.priorityfilingnumber,
-			priorityDate: req.body.prioritydate
+			priorityCountry: req.body.priorityCountry,
+			priorityFilingNumber: req.body.priorityFilingNumber,
+			priorityDate: req.body.priorityDate
 		},
 		active: true
 	}, function(err, patent){
@@ -71,10 +71,49 @@ module.exports.createPatent = function(req, res){
 	});
 };
 
+/**
+
+	Update fields in an existing patent application
+
+	PUT /api/patents/:patentid
+
+**/
+
 module.exports.updatePatent = function(req, res){
-	
-	
-	
+
+	if(!req.params || !req.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
+		return sendJsonResponse(res, "No Such Patent Found", 404);
+	}
+
+	Patent
+		.findById(req.params.patentid)
+		.exec(function(err, patent){
+
+			if(err){
+				return sendJsonResponse(res, err, 400);
+			}
+		
+			if(!patent){
+				return sendJsonReponse(res, "No Such Patent Found");
+			}
+
+			for(var field in Patent.schema.paths){
+				if(field != '_id' && field != '_v'){
+					if(req.body[field]){
+						patent[field] = req.body[field];
+					}
+				}
+			
+			}
+
+			patent.save(function(err){
+				if(err){
+					return sendJsonResponse(res, err, 400);
+				}
+				sendJsonResponse(res, patent, 200);
+			});
+
+		});
 };
 
 module.exports.deletePatent = function(req, res){

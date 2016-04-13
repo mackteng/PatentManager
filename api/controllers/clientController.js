@@ -41,9 +41,9 @@ module.exports.listAllClients = function(req, res){
 **/
 module.exports.createClient = function(req, res){
 	Client.create({
-			_id : req.body.clientnumber,
-			englishName: req.body.englishname,
-			chineseName: req.body.chinesename,
+			_id : req.body.clientNumber,
+			englishName: req.body.englishName,
+			chineseName: req.body.chineseName,
 			address: req.body.address,
 			telephone: req.body.telephone,
 	}, function(err, client){
@@ -61,11 +61,13 @@ module.exports.createClient = function(req, res){
 
 	Adds new contact(s) into an existing client 
 
+	PUT /api/clients/:clientid/contacts
+
 **/
 
-module.exports.addContact = function(req, res){
+module.exports.addContacts = function(req, res){
 	
-	var clientNumber = req.body.clientnumber;
+	var clientNumber = req.params.clientid;
 	var contacts = req.body.contacts;
 	
 	if(!clientNumber){
@@ -73,12 +75,12 @@ module.exports.addContact = function(req, res){
 	}
 	
 	if(!contacts){
-		return sendJsonResponse(res, "No Contacts Added", 400);	
+		return sendJsonResponse(res, "No Contacts Provided", 400);	
 	}
-	
-	
+		
 	Client
 		.findById(clientNumber)
+		.select('contacts')
 		.exec(function(err, client){
 			
 			if(err){
@@ -89,24 +91,58 @@ module.exports.addContact = function(req, res){
 				return sendJsonReponse(res, "No Client Found", 404);	
 			}
 		
-		
+			// push every contact in array to the contacts array in our document	
 			for(var i = 0; i < contacts.length; i++){
 				client.contacts.push(contacts[i]);
 			}
 		
+			// save when done
 			client.save(function(err, client){
 				if(err){
 					return sendJsonResponse(res, err, 400);
 				}
-				sendJsonResponse(res, client, 200);
+				sendJsonResponse(res, client.contacts, 200);
 			});
 		});
 }
+/**
 
+	Update Client 
+	PUT /api/clients/:clientid
+
+**/
 module.exports.updateClient = function(req, res){
 	
-	
-	
+	if(!req.params || !req.params.clientid){
+		return sendJsonResponse(res, "No ClientID Found", 404);
+	}
+
+	Client
+		.findById(req.params.clientid)
+		.exec(function(err, client){
+			if(err){
+				return sendJsonReponse(res, err, 400);
+			}
+			if(!client){
+				return sendJsonReponse(res, "No Such Client Found", 404);
+			}
+
+			for(var field in Client.schema.paths){
+				if(field != '_id' && field != '_v'){
+					if(req.body[field]){
+						client[field] = req.body[field];
+					}
+				}
+			}
+			
+			client.save(function(err){
+				if(err){
+					return sendJsonReponse(res, err, 400);
+				}
+				
+				sendJsonResponse(res, client, 200);
+			});
+		});
 };
 
 

@@ -10,7 +10,6 @@ var clientExistsValidator = function(clientId, response){
         .findById(clientId)
         .exec(function(err, client){
             if(err || !client) {
-				console.log('Invalid client');
 				response(false);
 			}
             else
