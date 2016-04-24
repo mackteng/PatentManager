@@ -1,7 +1,5 @@
 var mongoose = require('mongoose');
 var Patent = mongoose.model('Patent');
-// controllers for patent
-
 
 var sendJsonResponse = function(res, payload, status){
 	res.status(status);
@@ -11,42 +9,39 @@ var sendJsonResponse = function(res, payload, status){
 // TODO: implement filtering
 
 module.exports.listAllPatents = function(req, res){
-	
+
 	// retrieve all patent applications
 	Patent
 		.find()
 		.exec(function(err, patent){
 			if(err){
-				sendJsonResponse(res, err, 404);	
-			} else {
-				sendJsonResponse(res, patent, 200);
+				return sendJsonResponse(res, err, 404);
 			}
+			sendJsonResponse(res, patent, 200);
 		});
 };
 
 module.exports.listOnePatent = function(req, res){
-	
-	// find patent by patent id
-	if(req.params && req.params.patentid && mongoose.Types.ObjectId.isValid(req.params.patentid)){
-		Patent
-			.findById(req.params.patentid)
-			.exec(function(err, patent){
-				if(err){
-					sendJsonResponse(res, err, 400);
-				}
-				else if(!patent){
-					sendJsonResponse(res, "no such patent", 404);	
-				} else {
-					sendJsonResponse(res, patent, 200);
-				}
-			});
-	} else {
-		sendJsonResponse(res, "Invalid/NonExistent patentId", 404);	
+
+	if(!req.params || !res.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
+		return sendJsonResponse(res, "No PatentId Specified", 400);
 	}
+
+	Patent
+		.findById(req.params.patentid)
+		.exec(function(err, patent){
+			if(err){
+				return sendJsonResponse(res, err, 400);
+			}
+			if(!patent){
+				return sendJsonResponse(res, "no such patent", 404);
+			}
+			sendJsonResponse(res, patent, 200);
+		});
 };
 
 module.exports.createPatent = function(req, res){
-	
+
 	Patent.create({
 		clientId: req.body.clientId,
 		clientDocketNumber: req.body.clientDocketNumber,
@@ -64,21 +59,16 @@ module.exports.createPatent = function(req, res){
 		active: true
 	}, function(err, patent){
 		if(err){
-			sendJsonResponse(res, err, 400);	
-		} else {
-			sendJsonResponse(res, patent, 200);	
+			return sendJsonResponse(res, err, 400);
 		}
+		sendJsonResponse(res, patent, 200);
 	});
 };
 
 /**
-
 	Update fields in an existing patent application
-
 	PUT /api/patents/:patentid
-
 **/
-
 module.exports.updatePatent = function(req, res){
 
 	if(!req.params || !req.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
@@ -88,11 +78,9 @@ module.exports.updatePatent = function(req, res){
 	Patent
 		.findById(req.params.patentid)
 		.exec(function(err, patent){
-
 			if(err){
 				return sendJsonResponse(res, err, 400);
 			}
-		
 			if(!patent){
 				return sendJsonReponse(res, "No Such Patent Found");
 			}
@@ -103,7 +91,6 @@ module.exports.updatePatent = function(req, res){
 						patent[field] = req.body[field];
 					}
 				}
-			
 			}
 
 			patent.save(function(err){
@@ -112,13 +99,11 @@ module.exports.updatePatent = function(req, res){
 				}
 				sendJsonResponse(res, patent, 200);
 			});
-
 		});
 };
 
 module.exports.deletePatent = function(req, res){
-	
-	
-	
-};
 
+
+
+};
