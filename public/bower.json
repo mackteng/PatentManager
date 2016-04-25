@@ -29,5 +29,11 @@
     "bower_components",
     "composer.json",
     "documentation"
-  ]
+  ],
+  "dependencies": {
+      "angular": "~1.5.0",
+      "angular-cookies": "~1.5.0",
+      "angular-bootstrap": "~1.0.3",
+      "angular-ui-router": "^0.2.15"
+  }
 }

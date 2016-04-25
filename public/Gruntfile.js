@@ -6,8 +6,8 @@ module.exports = function (grunt) {
   grunt.initConfig({
     watch: {
       // If any .less file changes in directory "build/less/" run the "less"-task.
-      files: ["build/less/*.less", "build/less/skins/*.less", "dist/js/app.js"],
-      tasks: ["less", "uglify"]
+      files: ["build/less/*.less", "build/less/skins/*.less", "dist/js/app.js", "js/**/*.js"],
+      tasks: ["concat" , "uglify"]
     },
     // "less"-task configuration
     // This task will compile all less files upon saving to create both AdminLTE.css and AdminLTE.min.css
@@ -63,6 +63,18 @@ module.exports = function (grunt) {
         }
       }
     },
+    concat: {
+      options: {
+        // define a string to put between each file in the concatenated output
+        separator: ';'
+      },
+      dist: {
+        // the files to concatenate
+        src: ['js/**/*.js'],
+        // the location of the resulting JS file
+        dest: 'dist/js/patentApp.js'
+      }
+    },
     // Uglify task info. Compress the js files.
     uglify: {
       options: {
@@ -71,7 +83,8 @@ module.exports = function (grunt) {
       },
       my_target: {
         files: {
-          'dist/js/app.min.js': ['dist/js/app.js']
+          'dist/js/app.min.js': ['dist/js/app.js'],
+          'dist/js/patentApp.min.js' : ['dist/js/patentApp.js']
         }
       }
     },
@@ -149,6 +162,8 @@ module.exports = function (grunt) {
   grunt.loadNpmTasks('grunt-contrib-less');
   // Watch File Changes
   grunt.loadNpmTasks('grunt-contrib-watch');
+  // Concat JS files
+  grunt.loadNpmTasks('grunt-contrib-concat');
   // Compress JS Files
   grunt.loadNpmTasks('grunt-contrib-uglify');
   // Include Files Within HTML
@@ -168,5 +183,5 @@ module.exports = function (grunt) {
   grunt.registerTask('lint', ['jshint', 'csslint', 'bootlint']);
 
   // The default task (running "grunt" in console) is "watch"
-  grunt.registerTask('default', ['watch']);
+  grunt.registerTask('default', ['concat', 'uglify', 'watch']);
 };
