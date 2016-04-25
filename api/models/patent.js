@@ -5,26 +5,26 @@ var Event = require('./event.js');
 
 
 var clientExistsValidator = function(clientId, response){
-	
+
     this.model('Client')
         .findById(clientId)
         .exec(function(err, client){
             if(err || !client) {
-				response(false);
-			}
+							response(false);
+						}
             else
-				response(true);
+							response(true);
         });
 }
 
 
 // define schema for patent application
 var patentSchema = new mongoose.Schema({
-	
+
 	// clientID holds the reference to the client this patent application belongs to
 	// Use custom validator to mimic foreign key constraint
-	clientId :	{ 
-		type: Number, 
+	clientId :	{
+		type: String,
 		ref: 'Client' ,
 		required : true,
 		validate: clientExistsValidator
@@ -61,15 +61,15 @@ var patentSchema = new mongoose.Schema({
 		type: Boolean,
 		required: true
 	}
-});	
+});
 
 
 // set compound index for clientID and clientDocketNumber
 patentSchema.index({"clientID" : 1, "clientDocketNumber" : 1}, {unique: true});
 
-// set virtual getter for full docket 
+// set virtual getter for full docket
 patentSchema.virtual('FullDocketNumber').get(function(){
 	return this.clientId + '.' + this.clientDocketNumber;
 });
-	
+
 mongoose.model('Patent', patentSchema);
