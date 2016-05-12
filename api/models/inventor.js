@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 
 module.exports = new mongoose.Schema({
-	inventorName: String,
+	inventorChineseName: String,
+	inventorEnglishName: String,
 	inventorCountry: String,
 });
