@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 var Patent = mongoose.model('Patent');
+var EventHistory = mongoose.model('EventHistory');
 
 var sendJsonResponse = function(res, payload, status){
 	res.status(status);
@@ -23,7 +24,7 @@ module.exports.listAllPatents = function(req, res){
 
 module.exports.listOnePatent = function(req, res){
 
-	if(!req.params || !res.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
+	if(!req.params || !req.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
 		return sendJsonResponse(res, "No PatentId Specified", 400);
 	}
 
@@ -44,6 +45,7 @@ module.exports.createPatent = function(req, res){
 
 	Patent.create({
 		clientId: req.body.clientId,
+		docketNumber: req.body.docketNumber,
 		clientDocketNumber: req.body.clientDocketNumber,
 		country: req.body.country,
 		applicationType: req.body.applicationType,
@@ -61,7 +63,19 @@ module.exports.createPatent = function(req, res){
 		if(err){
 			return sendJsonResponse(res, err, 400);
 		}
-		sendJsonResponse(res, patent, 200);
+		var newEventHistory = new EventHistory({});
+		newEventHistory.save(function(err, eventHistory){
+				if(err){
+					return sendJsonResponse(res, err, 400);
+				}
+				patent.eventHistory = eventHistory._id;
+				patent.save(function(err, patent){
+					if(err){
+						return sendJsonResponse(res, err, 400);
+					}
+					sendJsonResponse(res, patent, 200);
+				});
+		});
 	});
 };
 

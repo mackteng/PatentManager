@@ -5,5 +5,3 @@ module.exports = new mongoose.Schema({
 	eventDeadline: Date,
 	eventNote: String
 });
-
-	

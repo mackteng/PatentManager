@@ -1,11 +1,9 @@
 var mongoose = require('mongoose');
 var Priority = require('./priority.js');
 var Inventor = require('./inventor.js');
-var Event = require('./event.js');
 
 
 var clientExistsValidator = function(clientId, response){
-
     this.model('Client')
         .findById(clientId)
         .exec(function(err, client){
@@ -29,10 +27,13 @@ var patentSchema = new mongoose.Schema({
 		required : true,
 		validate: clientExistsValidator
 	},
-	clientDocketNumber: {
+	docketNumber: {
 		type: Number,
 		required: true
 	},
+  clientDocketNumber:{
+    type: String,
+  },
 	country: {
 		type: String,
 		required: true
@@ -51,12 +52,15 @@ var patentSchema = new mongoose.Schema({
 	},
 	englishTitle: {
 		type: String,
-		required: true
 	},
 	chineseTitle: String,
+  issueNumber: String,
 	priority: Priority,
 	inventors: [Inventor],
-	eventHistory : [Event],
+	eventHistory : {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'eventHistory'
+  },
 	active : {
 		type: Boolean,
 		required: true
@@ -65,11 +69,11 @@ var patentSchema = new mongoose.Schema({
 
 
 // set compound index for clientID and clientDocketNumber
-patentSchema.index({"clientID" : 1, "clientDocketNumber" : 1}, {unique: true});
+patentSchema.index({"clientID" : 1, "docketNumber" : 1}, {unique: true});
 
 // set virtual getter for full docket
 patentSchema.virtual('FullDocketNumber').get(function(){
-	return this.clientId + '.' + this.clientDocketNumber;
+	return this.clientId + '.' + this.docketNumber + this.country;
 });
 
 mongoose.model('Patent', patentSchema);

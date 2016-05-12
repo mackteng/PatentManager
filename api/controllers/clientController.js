@@ -48,7 +48,7 @@ module.exports.listOneClient = function(req, res){
 
 
 /**
-	Creates a new client with no contacts
+	Creates a new client
 	Parameters:
 	  Required:
 		_id : Number,
@@ -65,6 +65,7 @@ module.exports.createClient = function(req, res){
 			chineseName: req.body.chineseName,
 			address: req.body.address,
 			telephone: req.body.telephone,
+			contacts: req.body.contacts
 	}, function(err, client){
 		if(err){
 			sendJsonResponse(res, err, 400);
@@ -74,54 +75,10 @@ module.exports.createClient = function(req, res){
 	});
 };
 
-/**
-	Adds new contact(s) into an existing client
-	PUT /api/clients/:clientid/contacts
-**/
 
-module.exports.addContacts = function(req, res){
-
-	var clientNumber = req.params.clientid;
-	var contacts = req.body.contacts;
-
-	if(!clientNumber){
-		return sendJsonResponse(res, "No Client Specified", 400);
-	}
-
-	if(!contacts){
-		return sendJsonResponse(res, "No Contacts Provided", 400);
-	}
-
-	Client
-		.findById(clientNumber)
-		.select('contacts')
-		.exec(function(err, client){
-
-			if(err){
-				return sendJsonResponse(res, err, 400);
-			}
-
-			if(!client){
-				return sendJsonReponse(res, "No Client Found", 404);
-			}
-
-			// push every contact in array to the contacts array in our document
-			for(var i = 0; i < contacts.length; i++){
-				client.contacts.push(contacts[i]);
-			}
-
-			// save when done
-			client.save(function(err, client){
-				if(err){
-					return sendJsonResponse(res, err, 400);
-				}
-				sendJsonResponse(res, client.contacts, 200);
-			});
-		});
-}
 
 /**
-	Update Client
+	Partially Update Client
 	PUT /api/clients/:clientid
 **/
 module.exports.updateClient = function(req, res){
