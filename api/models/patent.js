@@ -59,7 +59,7 @@ var patentSchema = new mongoose.Schema({
 	inventors: [Inventor],
 	eventHistory : {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'eventHistory'
+    ref: 'EventHistory'
   },
 	active : {
 		type: Boolean,
