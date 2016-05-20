@@ -1,10 +1,10 @@
 angular
   .module('patentApp')
-  .factory('patentService', ['$http', patentService]);
+  .factory('patentService', ['$http', 'config', patentService]);
 
-function patentService($http){
+function patentService($http, config){
 
-  var baseUrl = 'http://192.168.19.157/api/';
+  var baseUrl = config.baseUrl;
   var patentService = {};
 
   patentService.listAllPatents = function(){

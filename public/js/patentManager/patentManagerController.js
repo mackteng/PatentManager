@@ -1,14 +1,14 @@
 angular.module('patentApp').controller('patentController', patentController);
 angular.module('patentApp').controller('newPatentFormController', newPatentFormController);
 
-patentController.$inject=['allPatents', '$uibModal', '$log'];
-newPatentFormController.$inject=['$uibModalInstance', 'patentService'];
+patentController.$inject=['allPatents', 'allClients', '$uibModal', '$log'];
+newPatentFormController.$inject=['$uibModalInstance', 'allClients', 'patentService'];
 
-function patentController(allPatents, $uibModal){
+function patentController(allPatents, allClients, $uibModal){
   var vm = this;
   // patents
   vm.patents = allPatents.data;
-  vm.clients = null;
+  vm.clients = allClients.data;
 
   // advanced search collapse variable and functions
   vm.advancedSearchCollapse = true;
@@ -20,10 +20,15 @@ function patentController(allPatents, $uibModal){
   vm.newPatentForm = function(){
     var modalInstance = $uibModal.open({
       templateUrl: 'js/patentManager/newPatentForm.html',
-      size: 'lg',
+      size: 'med',
       backdrop : 'static',
       controller: 'newPatentFormController',
-      controllerAs: 'vm'
+      controllerAs: 'vm',
+      resolve:{
+          allClients : function(){
+            return vm.clients
+          }
+      }
     });
 
     modalInstance.result.then(function(patent){
@@ -32,12 +37,12 @@ function patentController(allPatents, $uibModal){
   }
 }
 
-function newPatentFormController($uibModalInstance, patentService){
+function newPatentFormController($uibModalInstance,  allClients, patentService){
   var vm = this;
 
   // patent application
   vm.patent = {};
-
+  vm.clients = allClients;
   // message alert
   vm.message = {
     type: 'success',
@@ -46,8 +51,8 @@ function newPatentFormController($uibModalInstance, patentService){
   vm.closeMessage = function(){
     vm.message.content = null;
   }
-  vm.addMessage = function(type,message){
-    vm.message.type = message;
+  vm.setMessage = function(type,message){
+    vm.message.type = type;
     vm.message.content = message;
   }
 
@@ -90,20 +95,23 @@ function newPatentFormController($uibModalInstance, patentService){
   vm.submit = function(){
     //alert(JSON.stringify(vm.patent, null, 4));
     // validate
-
+    if(!vm.clientId || !vm.docketNumber || !vm.country || !vm.filingDate || !vm.filingNumber || !vm.applicationType || !vm.englishTitle){
+      vm.setMessage('danger', 'Please fill in the required fields!');
+      return false;
+    }
     // send
     patentService
       .addNewPatent(vm.patent)
       .success(function(data){
         $uibModalInstance.close(data);
       })
-      .error(function(data){
-        vm.message = "Error Occured. Patent Not Saved";
+      .error(function(err){
+        vm.setMessage('danger', 'ERROR  : ' + err.message);
       });
   };
 
   // cancel
   vm.cancel = function(){
-    $uibModalInstance.close();
+    $uibModalInstance.dismiss('cancel');
   };
 }

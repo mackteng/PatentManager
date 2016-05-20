@@ -89,11 +89,11 @@
             </thead>
             <tbody>
             <tr ng-repeat='patent in vm.patents'>
-              <td>{{patent.clientId}}.{{patent.clientDocketNumber}}{{patent.country | uppercase}}</td>
+              <td>{{patent.clientId}}_{{patent.docketNumber}}_{{patent.country | uppercase}}</td>
               <td>{{patent.clientId}}</td>
               <td>{{patent.applicationType}}</td>
               <td>{{patent.englishTitle}}</td>
-              <td>Date</td>
+              <td>{{patent.filingDate}}</td>
             </tr>
           </tbody>
         </table>

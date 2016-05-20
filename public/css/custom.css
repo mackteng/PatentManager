@@ -1,3 +1,7 @@
-.modal-lg {
-  width: 1200px;
+.modal-med {
+  width:700px;
+}
+
+.form-horizontal .control-label{
+  text-align: center;
 }

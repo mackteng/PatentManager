@@ -12,11 +12,12 @@ function routeConfig($stateProvider, $urlRouterProvider){
       })
       .state('manage',{
         url:'/manage',
-        templateUrl: 'templates/patentDatabase.html',
+        templateUrl: 'templates/patentManager.html',
         controller: 'patentController',
         controllerAs: 'vm',
         resolve:{
-          allPatents : allPatents
+          allPatents : allPatents,
+          allClients : allClients
         }
       });
 }
@@ -24,4 +25,9 @@ function routeConfig($stateProvider, $urlRouterProvider){
 allPatents.$inject=['patentService'];
 function allPatents(patentService){
   return patentService.listAllPatents();
+}
+
+allClients.$inject=['clientService'];
+function allClients(clientService){
+  return clientService.listAllClients();
 }

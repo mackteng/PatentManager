@@ -3,26 +3,36 @@
       <form class="form-horizontal">
         <!-- Client Info -->
         <div class="form-group">
-          <label class="col-sm-2 control-label">Client Number</label>
-          <div class="col-sm-2">
-            <input class="form-control" placeholder="Client" ng-model="vm.patent.clientId">
-          </div>
-          <label class="col-sm-2 control-label">Docket Number</label>
-          <div class="col-sm-2">
-            <input class="form-control" placeholder="Docket Number" ng-model="vm.patent.docketNumber">
-          </div>
-          <label class="col-sm-2 control-label">Country</label>
-          <div class="col-sm-2">
-            <select class="form-control" placeholder="Country" ng-model="vm.patent.country">
-              <option ng-repeat="country in vm.listCountries" value="{{country}}"> {{country}} </option>
+          <label class="col-sm-2 control-label">Client</label>
+          <div class="col-sm-4">
+            <select class="form-control" ng-model="vm.patent.clientId">
+              <option ng-repeat="client in vm.clients" value="{{client._id}}">{{client._id}}-{{client.chineseName}}</option>
             </select>
+          </div>
+          <label class="col-sm-2 control-label">Docket</label>
+          <div class="col-sm-4">
+            <input class="form-control" placeholder="Docket Number" ng-model="vm.patent.docketNumber">
           </div>
         </div>
         <!-- Client Info End -->
         <!-- Patent Information -->
         <div class="form-group">
-          <label class="col-sm-2 control-label">Filing Date</label>
-          <div class="col-sm-2">
+          <label class="col-sm-2 control-label">Country</label>
+          <div class="col-sm-4">
+            <select class="form-control" placeholder="Country" ng-model="vm.patent.country">
+              <option ng-repeat="country in vm.listCountries" value="{{country}}"> {{country}} </option>
+            </select>
+          </div>
+          <label class="col-sm-2 control-label">Type</label>
+          <div class="col-sm-4">
+            <select class="form-control" placeholder="Application Type" ng-model="vm.patent.applicationType">
+              <option ng-repeat="type in vm.applicationTypes" val="{{type}}">{{type}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">File Date</label>
+          <div class="col-sm-4">
             <p class="input-group">
               <input type="text" class="form-control" uib-datepicker-popup ng-model="vm.patent.filingDate" is-open="vm.picker1" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" />
               <span class="input-group-btn">
@@ -30,15 +40,9 @@
               </span>
             </p>
           </div>
-          <label class="col-sm-2 control-label">Filing Number</label>
-          <div class="col-sm-2">
-            <input class="form-control" placeholder="Filing Number" ng-model="vm.patent.filingNumber">
-          </div>
-          <label class="col-sm-2 control-label">Type</label>
-          <div class="col-sm-2">
-            <select class="form-control" placeholder="Application Type" ng-model="vm.patent.applicationType">
-              <option ng-repeat="type in vm.applicationTypes" val="{{type}}"> {{type}} </option>
-            </select>
+          <label class="col-sm-2 control-label">App. Number</label>
+          <div class="col-sm-4">
+            <input class="form-control" placeholder="Application Number" ng-model="vm.patent.filingNumber">
           </div>
         </div>
         <!-- Patent Information End -->
@@ -60,21 +64,23 @@
         <!-- Priority Form -->
         <div class="form-group">
           <div class="col-sm-2">
-            <label class="pull-right">
+            <label class="text-center">
               Priority
             </label>
           </div>
           <div class="col-sm-1">
             <input type="checkbox" ng-model="vm.enablePriorityForm" ng-change="vm.clearPriority()">
           </div>
-          <label class="col-sm-1 control-label">Country</label>
-          <div class="col-sm-2">
+        </div>
+        <div class="form-group" ng-show="vm.enablePriorityForm">
+          <label class="col-sm-offset-2 col-sm-2 control-label" >Country</label>
+          <div class="col-sm-3">
             <select class="form-control" ng-disabled="!vm.enablePriorityForm" ng-model="vm.patent.priority.priorityCountry">
               <option ng-repeat="country in vm.listCountries" value="{{country}}"> {{country}} </option>
             </select>
           </div>
-          <label class="col-sm-1 control-label">Date</label>
-          <div class="col-sm-2">
+          <label class="col-sm-2 control-label">Priority Date</label>
+          <div class="col-sm-3">
             <p class="input-group">
               <input type="text" class="form-control" uib-datepicker-popup ng-model="vm.patent.priority.priorityDate" is-open="vm.picker2" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" ng-disabled="!vm.enablePriorityForm"/>
               <span class="input-group-btn">
@@ -82,9 +88,11 @@
               </span>
             </p>
           </div>
-          <label class="col-sm-1 control-label">Filing #</label>
-          <div class="col-sm-2">
-            <input class="form-control" placeholder="Filing Number" ng-disabled="!vm.enablePriorityForm" ng-model="vm.patent.priority.priorityFilingNumber"></input>
+        </div>
+        <div class="form-group" ng-show="vm.enablePriorityForm">
+          <label class="col-sm-offset-2 col-sm-2 control-label">App. Number</label>
+          <div class="col-sm-3">
+            <input class="form-control" placeholder="Filing Number" ng-disabled="!vm.enablePriorityForm" ng-model="vm.patent.priority.priorityFilingNumber">
           </div>
         </div>
         <!-- Priority Form End -->
@@ -92,26 +100,26 @@
         <!-- Inventors Information -->
         <div class="form-group">
           <label class="col-sm-2 control-label">Inventors</label>
-          <a class="btn btn-sm btn-warning col-sm-10" ng-click="vm.addInventor()">Add Inventor</a>
+          <a class="btn btn-xs btn-warning col-sm-offset-1 col-sm-8" ng-click="vm.addInventor()">Add Inventor</a>
         </div>
           <!-- Inventors Form -->
         <div class="form-group" ng-repeat="inventor in vm.patent.inventors">
-          <label class="col-sm-2 control-label">Name</label>
+          <label class="col-sm-offset-1 col-sm-1 control-label">Name</label>
           <div class="col-sm-2">
-            <input class="form-control" placeholder="Inventor Name" ng-model="inventor.inventorEnglishName">
+            <input class="form-control" placeholder="Name" ng-model="inventor.inventorEnglishName">
           </div>
           <label class="col-sm-1 control-label">Country</label>
-          <div class="col-sm-1" style="width: 12%">
+          <div class="col-sm-2" style="width:14%">
             <select class="form-control" ng-model="inventor.inventorCountry">
               <option ng-repeat="country in vm.listCountries" value="{{country}}"> {{country}} </option>
             </select>
           </div>
           <label class="col-sm-1 control-label">Address</label>
-          <div class="col-sm-4">
+          <div class="col-sm-3" style="width:30%">
             <input class="form-control" placeholder="Address" ng-model="inventor.inventorAddress">
           </div>
-          <div>
-            <a ng-click="vm.deleteInventor($index)">
+          <div class="col-sm-1" style="width:2%">
+            <a style="display:inline" ng-click="vm.deleteInventor($index)">
               <span class="glyphicon glyphicon-remove control-label"></span>
             </a>
           </div>
@@ -132,15 +140,15 @@
         <hr>
         <!-- Submit Button -->
         <div class="form-group">
-          <div class="col-sm-offset-4 col-sm-4">
-            <button class="btn btn-success form-control" ng-click="vm.submit()"> Submit </button>
+          <div class="col-sm-offset-3 col-sm-6">
+            <button class="btn btn-success form-control btn-xs" ng-click="vm.submit()"> Submit </button>
           </div>
         </div>
         <!-- Submit Button End -->
         <!-- Cancel Button -->
         <div class="form-group">
-          <div class="col-sm-offset-4 col-sm-4">
-            <button class="btn btn-danger form-control" ng-click="vm.cancel()"> Cancel </button>
+          <div class="col-sm-offset-3 col-sm-6">
+            <button class="btn btn-danger form-control btn-xs" ng-click="vm.cancel()"> Cancel </button>
           </div>
         </div>
         <!-- Cancel Button End -->
