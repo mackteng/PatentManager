@@ -38,6 +38,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
   <script type="text/javascript" src="src/components/angular-cookies/angular-cookies.min.js"></script>
   <script type="text/javascript" src="src/components/angular-ui-router/release/angular-ui-router.min.js"></script>
   <script src="dist/js/patentApp.min.js"></script>
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/custom.css">
 
 </head>
 <!--
@@ -264,8 +266,8 @@ desired effect
       <ul class="sidebar-menu">
         <li class="header">HEADER</li>
         <!-- Optionally, you can add icons to the links -->
-        <li class="active"><a href="#"><i class="fa fa-link"></i> <span>Link</span></a></li>
-        <li><a href="#"><i class="fa fa-link"></i> <span>Another Link</span></a></li>
+        <li class="active"><a href="#" ui-sref="overview"><i class="fa fa-link"></i> <span>Overview</span></a></li>
+        <li><a href="#" ui-sref="manage"><i class="fa fa-link"></i> <span>Patent Database</span></a></li>
         <li class="treeview">
           <a href="#"><i class="fa fa-link"></i> <span>Multilevel</span> <i class="fa fa-angle-left pull-right"></i></a>
           <ul class="treeview-menu">

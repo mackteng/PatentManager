@@ -1,13 +1,4 @@
 <section class="content">
-  <!-- Menu Bar -->
-  <div class="btn-group btn-group-justified">
-    <a href="#" class="btn btn-success" ng-click="vm.togglePatentForm()">New Patent</a>
-    <a href="#" class="btn btn-info" ng-click="vm.toggleAdvancedSearch()">Advanced Search</a>
-  </div>
-
-  <!-- New Patent Form -->
-  <p uib-collapse="vm.patentFormCollapse"> patent form </p>
-
 
   <!-- Advanced Search Form -->
   <form class="well" uib-collapse="vm.advancedSearchCollapse">
@@ -77,13 +68,12 @@
   </form>
 
   <!-- /Advanced Search Form -->
-
-
   <div class="row">
     <div class="col-xs-12">
       <div class="box">
         <div class="box-header">
-          <h3 class="box-title">Data Table With Full Features</h3>
+          <a href="#" class="btn btn-info col-xs-6" ng-click="vm.toggleAdvancedSearch()">Advanced Search</a>
+          <a href="#" class="btn btn-success col-xs-6" ng-click="vm.newPatentForm()">New Patent</a>
         </div>
         <!-- /.box-header -->
         <div class="box-body">

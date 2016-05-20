@@ -36,11 +36,13 @@ var patentSchema = new mongoose.Schema({
   },
 	country: {
 		type: String,
-		required: true
+		required: true,
+    enum: ['US', 'TW', 'CN', 'JP', 'KR', 'EU']
 	},
 	applicationType: {
 		type: String,
-		required: true
+		required: true,
+    enum:['Patent']
 	},
 	filingDate: {
 		type: Date,

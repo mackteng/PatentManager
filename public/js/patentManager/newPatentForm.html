@@ -1,0 +1,148 @@
+<div class="well">
+      <uib-alert type="{{vm.message.type}}" close="vm.closeMessage()" ng-show="vm.message.content"> {{ vm.message.content }} </uib-alert>
+      <form class="form-horizontal">
+        <!-- Client Info -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Client Number</label>
+          <div class="col-sm-2">
+            <input class="form-control" placeholder="Client" ng-model="vm.patent.clientId">
+          </div>
+          <label class="col-sm-2 control-label">Docket Number</label>
+          <div class="col-sm-2">
+            <input class="form-control" placeholder="Docket Number" ng-model="vm.patent.docketNumber">
+          </div>
+          <label class="col-sm-2 control-label">Country</label>
+          <div class="col-sm-2">
+            <select class="form-control" placeholder="Country" ng-model="vm.patent.country">
+              <option ng-repeat="country in vm.listCountries" value="{{country}}"> {{country}} </option>
+            </select>
+          </div>
+        </div>
+        <!-- Client Info End -->
+        <!-- Patent Information -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Filing Date</label>
+          <div class="col-sm-2">
+            <p class="input-group">
+              <input type="text" class="form-control" uib-datepicker-popup ng-model="vm.patent.filingDate" is-open="vm.picker1" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.openDatePicker1()"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+          </div>
+          <label class="col-sm-2 control-label">Filing Number</label>
+          <div class="col-sm-2">
+            <input class="form-control" placeholder="Filing Number" ng-model="vm.patent.filingNumber">
+          </div>
+          <label class="col-sm-2 control-label">Type</label>
+          <div class="col-sm-2">
+            <select class="form-control" placeholder="Application Type" ng-model="vm.patent.applicationType">
+              <option ng-repeat="type in vm.applicationTypes" val="{{type}}"> {{type}} </option>
+            </select>
+          </div>
+        </div>
+        <!-- Patent Information End -->
+        <!-- English & Chinese Titles -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">English Title</label>
+          <div class="col-sm-10">
+            <input class="form-control" placeholder="English Title" ng-model="vm.patent.englishTitle">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Chinese Title</label>
+          <div class="col-sm-10">
+            <input class="form-control" placeholder="Chinese Title" ng-model="vm.patent.chineseTitle">
+          </div>
+        </div>
+        <!-- English & Chinese Titles End -->
+        <hr>
+        <!-- Priority Form -->
+        <div class="form-group">
+          <div class="col-sm-2">
+            <label class="pull-right">
+              Priority
+            </label>
+          </div>
+          <div class="col-sm-1">
+            <input type="checkbox" ng-model="vm.enablePriorityForm" ng-change="vm.clearPriority()">
+          </div>
+          <label class="col-sm-1 control-label">Country</label>
+          <div class="col-sm-2">
+            <select class="form-control" ng-disabled="!vm.enablePriorityForm" ng-model="vm.patent.priority.priorityCountry">
+              <option ng-repeat="country in vm.listCountries" value="{{country}}"> {{country}} </option>
+            </select>
+          </div>
+          <label class="col-sm-1 control-label">Date</label>
+          <div class="col-sm-2">
+            <p class="input-group">
+              <input type="text" class="form-control" uib-datepicker-popup ng-model="vm.patent.priority.priorityDate" is-open="vm.picker2" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" ng-disabled="!vm.enablePriorityForm"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.openDatePicker2()"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+          </div>
+          <label class="col-sm-1 control-label">Filing #</label>
+          <div class="col-sm-2">
+            <input class="form-control" placeholder="Filing Number" ng-disabled="!vm.enablePriorityForm" ng-model="vm.patent.priority.priorityFilingNumber"></input>
+          </div>
+        </div>
+        <!-- Priority Form End -->
+      <hr>
+        <!-- Inventors Information -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Inventors</label>
+          <a class="btn btn-sm btn-warning col-sm-10" ng-click="vm.addInventor()">Add Inventor</a>
+        </div>
+          <!-- Inventors Form -->
+        <div class="form-group" ng-repeat="inventor in vm.patent.inventors">
+          <label class="col-sm-2 control-label">Name</label>
+          <div class="col-sm-2">
+            <input class="form-control" placeholder="Inventor Name" ng-model="inventor.inventorEnglishName">
+          </div>
+          <label class="col-sm-1 control-label">Country</label>
+          <div class="col-sm-1" style="width: 12%">
+            <select class="form-control" ng-model="inventor.inventorCountry">
+              <option ng-repeat="country in vm.listCountries" value="{{country}}"> {{country}} </option>
+            </select>
+          </div>
+          <label class="col-sm-1 control-label">Address</label>
+          <div class="col-sm-4">
+            <input class="form-control" placeholder="Address" ng-model="inventor.inventorAddress">
+          </div>
+          <div>
+            <a ng-click="vm.deleteInventor($index)">
+              <span class="glyphicon glyphicon-remove control-label"></span>
+            </a>
+          </div>
+        </div>
+      <hr>
+          <!-- Inventors Form End -->
+        <!-- Inventors Information End -->
+        <!-- Active -->
+        <div class="form-group">
+          <div class="col-sm-2">
+            <label class="pull-right" for="MyCheckBox">Active</label>
+          </div>
+          <div class="col-lg-9">
+            <input type="checkbox" name="MyCheckBox" ng-model="vm.patent.active">
+          </div>
+        </div>
+        <!-- Active End -->
+        <hr>
+        <!-- Submit Button -->
+        <div class="form-group">
+          <div class="col-sm-offset-4 col-sm-4">
+            <button class="btn btn-success form-control" ng-click="vm.submit()"> Submit </button>
+          </div>
+        </div>
+        <!-- Submit Button End -->
+        <!-- Cancel Button -->
+        <div class="form-group">
+          <div class="col-sm-offset-4 col-sm-4">
+            <button class="btn btn-danger form-control" ng-click="vm.cancel()"> Cancel </button>
+          </div>
+        </div>
+        <!-- Cancel Button End -->
+      </form>
+</div>

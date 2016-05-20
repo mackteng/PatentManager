@@ -4,8 +4,7 @@ angular
 
 function routeConfig($stateProvider, $urlRouterProvider){
 
-    $urlRouterProvider.otherwise('/manage');
-
+    //$urlRouterProvider.otherwise('/manage');
     $stateProvider
       .state('overview',{
         url:'/overview',
@@ -13,16 +12,16 @@ function routeConfig($stateProvider, $urlRouterProvider){
       })
       .state('manage',{
         url:'/manage',
-        templateUrl: 'templates/manage.html',
+        templateUrl: 'templates/patentDatabase.html',
         controller: 'patentController',
         controllerAs: 'vm',
         resolve:{
-          patentData : patentData
+          allPatents : allPatents
         }
       });
 }
 
-patentData.$inject=['patentService'];
-function patentData(patentService){
+allPatents.$inject=['patentService'];
+function allPatents(patentService){
   return patentService.listAllPatents();
 }
