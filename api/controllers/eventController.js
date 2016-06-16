@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Patent = mongoose.model('Patent');
 var EventHistory = mongoose.model('EventHistory');
+var Event = mongoose.model('Event');
 
 var sendJsonResponse = function(res, payload, status){
 	res.status(status);
@@ -30,11 +31,17 @@ module.exports.addEvent = function(req, res){
 	Patent
 		.findById(req.params.patentid)
 		.populate('eventHistory')
-		.select('eventHistory')
+		.select('eventHistory lastEvent')
 		.exec(function(err, patent){
 				if(err) return sendJsonResponse(res, err, 400);
-				patent.eventHistory.eventHistory.push(req.body.event);
-				patent.eventHistory.save(function(err, history){
+				var event = new Event({
+					eventName : req.body.eventName,
+					eventDeadline : req.body.eventDeadline,
+					eventNote: req.body.eventNote
+				});
+				patent.lastEvent = event;
+				patent.eventHistory.eventHistory.unshift(event);
+				patent.save(function(err, history){
 							if(err) return sendJsonResponse(res, err, 400);
 							sendJsonResponse(res, history, 200);
 						})
@@ -54,7 +61,7 @@ module.exports.deleteEvent = function(req, res){
 		.exec(function(err, patent){
 			if(err) return sendJsonResponse(res, err, 400);
 			var history = patent.eventHistory.eventHistory;
-			history.splice(history.indexOf(req.body.event), 1);
+			history.splice(0,1);
 			patent.eventHistory.save(function(err, history){
 					if(err) return sendJsonResponse(res, err, 400);
 					sendJsonResponse(res, history, 200);

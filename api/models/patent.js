@@ -1,7 +1,7 @@
 var mongoose = require('mongoose');
 var Priority = require('./priority.js');
 var Inventor = require('./inventor.js');
-
+var Event = require('./event.js');
 
 var clientExistsValidator = function(clientId, response){
     this.model('Client')
@@ -59,6 +59,9 @@ var patentSchema = new mongoose.Schema({
   issueNumber: String,
 	priority: Priority,
 	inventors: [Inventor],
+  lastEvent : {
+    type: Event
+  },
 	eventHistory : {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EventHistory'

@@ -43,7 +43,7 @@ module.exports.listOnePatent = function(req, res){
 
 module.exports.createPatent = function(req, res){
 
-	Patent.create({
+	var patent = {
 		clientId: req.body.clientId,
 		docketNumber: req.body.docketNumber,
 		clientDocketNumber: req.body.clientDocketNumber,
@@ -53,17 +53,23 @@ module.exports.createPatent = function(req, res){
 		filingNumber: req.body.filingNumber,
 		englishTitle: req.body.englishTitle,
 		chineseTitle: req.body.chineseTitle,
-		priority: {
-			priorityCountry: req.body.priorityCountry,
-			priorityFilingNumber: req.body.priorityFilingNumber,
-			priorityDate: req.body.priorityDate
-		},
+		inventors: req.body.inventors,
 		active: true
-	}, function(err, patent){
+	};
+
+	if(req.body.priority){
+		patent.priority = {
+			priorityCountry: req.body.priority.priorityCountry,
+			priorityFilingNumber: req.body.priority.priorityFilingNumber,
+			priorityDate: req.body.priority.priorityDate
+		};
+	}
+	Patent.create(patent, function(err, patent){
 		if(err){
 			return sendJsonResponse(res, err, 400);
 		}
-		var newEventHistory = new EventHistory({});
+		var newEventHistory = new EventHistory({patentId : patent._id});
+
 		newEventHistory.save(function(err, eventHistory){
 				if(err){
 					return sendJsonResponse(res, err, 400);
