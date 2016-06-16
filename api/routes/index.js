@@ -17,7 +17,7 @@ router.delete('/patents/:patentid', patentController.deletePatent);
 // define api routes for event history
 router.get('/patents/:patentid/events', eventController.getEventHistory);
 router.post('/patents/:patentid/events', eventController.addEvent);
-router.put('/patents/:patentid/events', eventController.deleteEvent);
+router.delete('/patents/:patentid/events', eventController.deleteEvent);
 
 
 // Returns a listing of all clients
@@ -28,8 +28,5 @@ router.post('/clients', clientController.createClient);
 router.put('/clients/:clientid', clientController.updateClient);
 // Delete an existing client
 router.delete('/clients', clientController.deleteClient);
-
-
-
 
 module.exports = router;

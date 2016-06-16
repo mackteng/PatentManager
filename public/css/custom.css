@@ -5,3 +5,26 @@
 .form-horizontal .control-label{
   text-align: center;
 }
+
+.details{
+  padding: 19px;
+}
+
+.test{
+  background-color:#f5f5f5;
+  border-right:1px solid black;
+}
+
+.eventTimeline{
+  padding-left: 20px;
+  border-left : 2px solid black;
+}
+
+#addEvent{
+  position: relative;
+  bottom: 0px;
+}
+
+textarea { 
+  resize:none ;
+}
