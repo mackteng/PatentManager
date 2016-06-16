@@ -63,11 +63,7 @@
         <hr>
         <!-- Priority Form -->
         <div class="form-group">
-          <div class="col-sm-2">
-            <label class="text-center">
-              Priority
-            </label>
-          </div>
+          <label class="col-sm-2 control-label">Priority</label>
           <div class="col-sm-1">
             <input type="checkbox" ng-model="vm.enablePriorityForm" ng-change="vm.clearPriority()">
           </div>
@@ -129,9 +125,7 @@
         <!-- Inventors Information End -->
         <!-- Active -->
         <div class="form-group">
-          <div class="col-sm-2">
-            <label class="pull-right" for="MyCheckBox">Active</label>
-          </div>
+          <label class="col-sm-2 control-label">Active</label>
           <div class="col-lg-9">
             <input type="checkbox" name="MyCheckBox" ng-model="vm.patent.active">
           </div>
