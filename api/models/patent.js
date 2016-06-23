@@ -59,7 +59,7 @@ var patentSchema = new mongoose.Schema({
   issueNumber: String,
 	priority: Priority,
 	inventors: [Inventor],
-  lastEvent : {
+  lastDeadline : {
     type: Event
   },
 	eventHistory : {

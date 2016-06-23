@@ -8,7 +8,12 @@ function routeConfig($stateProvider, $urlRouterProvider){
     $stateProvider
       .state('overview',{
         url:'/overview',
-        templateUrl: 'templates/overview.html'
+        templateUrl: 'js/overview/overview.html',
+        controller: 'overviewController',
+        controllerAs: 'vm',
+        resolve:{
+          allPatents : allPatents
+        }
       })
       .state('manage',{
         url:'/manage',

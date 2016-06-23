@@ -6,7 +6,6 @@ function patentController(allPatents, allClients, $uibModal){
   vm.patents = allPatents.data;
   vm.clients = allClients.data;
 
-
   console.log(vm.patents);
 
   // advanced search collapse variable and functions
@@ -14,7 +13,18 @@ function patentController(allPatents, allClients, $uibModal){
   vm.toggleAdvancedSearch = function(){
     vm.advancedSearchCollapse = !vm.advancedSearchCollapse;
   }
-  vm.search={};
+
+  // ordering properties
+  vm.orderProperty='clientId';
+  vm.reverse=false;
+  vm.changeOrder = function(property){
+      if(vm.orderProperty === property){
+        vm.reverse = !vm.reverse;
+      } else {
+        vm.reverse = false;
+        vm.orderProperty = property;
+      }
+  };
 
   // new patent form variable and functions
   vm.newPatentForm = function(){

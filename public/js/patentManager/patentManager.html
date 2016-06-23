@@ -81,12 +81,12 @@
               <th class="col-xs-1">Docket Number</th>
               <th class="col-xs-1">Client Name</th>
               <th class="col-xs-1">Application Type </th>
-              <th class="col-xs-7">Title</th>
+              <th class="col-xs-7" ng-click="vm.changeOrder('englishTitle')">Title</th>
               <th class="col-xs-2">Status</th>
             </tr>
             </thead>
             <tbody>
-            <tr ng-repeat='patent in vm.patents | filter:vm.search'>
+            <tr ng-repeat='patent in vm.patents | filter:vm.search | orderBy: vm.orderProperty : vm.reverse'>
               <td><a ng-href="#/manage/{{patent._id}}">{{patent.clientId}}_{{patent.docketNumber}}_{{patent.country | uppercase}}</a></td>
               <td>{{patent.clientId}}</td>
               <td>{{patent.applicationType}}</td>

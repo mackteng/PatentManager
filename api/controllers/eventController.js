@@ -39,7 +39,7 @@ module.exports.addEvent = function(req, res){
 					eventDeadline : req.body.eventDeadline,
 					eventNote: req.body.eventNote
 				});
-				patent.lastEvent = event;
+				if(event.eventDeadline) patent.lastDeadline = event;
 				patent.eventHistory.eventHistory.unshift(event);
 				patent.save(function(err, history){
 							if(err) return sendJsonResponse(res, err, 400);
