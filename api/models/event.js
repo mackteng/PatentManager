@@ -1,9 +1,12 @@
 var mongoose = require('mongoose');
 
-module.exports = new mongoose.Schema({
-	eventName : String,
+var eventSchema = new mongoose.Schema({
+	eventName : {
+		type: String,
+		required: true
+	},
 	eventDeadline: Date,
 	eventNote: String
 });
 
-	
+mongoose.model('Event', eventSchema);

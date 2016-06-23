@@ -3,7 +3,7 @@ var Contact = require('./contact.js');
 
 var clientSchema = new mongoose.Schema({
 	_id : {
-		type: Number,
+		type: String,
 		required: true
 	},
 	englishName: {
@@ -19,4 +19,4 @@ var clientSchema = new mongoose.Schema({
 	contacts : [Contact]
 });
 
-mongoose.model('Client', clientSchema); 
+mongoose.model('Client', clientSchema);

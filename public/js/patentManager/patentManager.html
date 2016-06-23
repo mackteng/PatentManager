@@ -1,0 +1,106 @@
+<section class="content" ui-view>
+  <!-- Advanced Search Form -->
+  <form class="well" uib-collapse="vm.advancedSearchCollapse">
+    <div class="form-group row">
+      <label for="inputEmail3" class="col-sm-1 form-control-label">ClientId</label>
+      <div class="col-sm-5">
+        <input class="form-control" ng-model="vm.search.clientId" placeholder="ClientId">
+      </div>
+      <label for="inputEmail3" class="col-sm-1 form-control-label">Chinese Title</label>
+      <div class="col-sm-5">
+        <input class="form-control" ng-model="vm.search.chineseTitle" placeholder="Chinese Title">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputPassword3" class="col-sm-1 form-control-label">Docket Number</label>
+      <div class="col-sm-5">
+        <input class="form-control" ng-model="vm.search.docketNumber" placeholder="Docket Number">
+      </div>
+      <label for="inputEmail3" class="col-sm-1 form-control-label">English Title</label>
+      <div class="col-sm-5">
+        <input class="form-control" ng-model="vm.search.englishTitle" placeholder="English Title">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputPassword3" class="col-sm-1 form-control-label">Country</label>
+      <div class="col-sm-5">
+        <input class="form-control" ng-model="vm.search.country" placeholder="Country">
+      </div>
+      <label for="inputEmail3" class="col-sm-1 form-control-label">Filing Date</label>
+      <div class="col-sm-5">
+        <input class="form-control" ng-model="vm.search.filingDate" placeholder="Filing Date">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label for="inputPassword3" class="col-sm-1 form-control-label">Application Type</label>
+      <div class="col-sm-5">
+        <input class="form-control" ng-model="vm.search.applicationType" placeholder="Docket Number">
+      </div>
+      <label for="inputEmail3" class="col-sm-1 form-control-label">Application Number</label>
+      <div class="col-sm-5">
+        <input class="form-control" ng-model="vm.search.filingNumber" placeholder="Application Number">
+      </div>
+    </div>
+    <div class="form-group row">
+      <label class="col-sm-1">Active</label>
+      <div class="col-sm-5">
+        <div class="radio">
+          <label>
+            <input type="radio" ng-model="vm.search.active" name="gridRadios" id="gridRadios1" value="true" checked>
+            Yes
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" ng-model="vm.search.active" name="gridRadios" id="gridRadios2" value="false">
+            No
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="form-group row" ng-show="false">
+      <div class="col-sm-offset-6 col-sm-12">
+        <button type="submit" class="btn btn-primary">Search</button>
+      </div>
+    </div>
+  </form>
+  <!-- /Advanced Search Form -->
+  <div class="row">
+    <div class="col-xs-12">
+      <div class="box">
+        <div class="box-header">
+          <a href="#" class="btn btn-info col-xs-6" ng-click="vm.toggleAdvancedSearch()">Advanced Search</a>
+          <a href="#" class="btn btn-success col-xs-6" ng-click="vm.newPatentForm()">New Patent</a>
+        </div>
+        <!-- /.box-header -->
+        <div class="box-body">
+          <table id="example1" class="table table-bordered table-striped">
+            <thead>
+            <tr>
+              <th class="col-xs-1">Docket Number</th>
+              <th class="col-xs-1">Client Name</th>
+              <th class="col-xs-1">Application Type </th>
+              <th class="col-xs-7" ng-click="vm.changeOrder('englishTitle')">Title</th>
+              <th class="col-xs-2">Status</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat='patent in vm.patents | filter:vm.search | orderBy: vm.orderProperty : vm.reverse'>
+              <td><a ng-href="#/manage/{{patent._id}}">{{patent.clientId}}_{{patent.docketNumber}}_{{patent.country | uppercase}}</a></td>
+              <td>{{patent.clientId}}</td>
+              <td>{{patent.applicationType}}</td>
+              <td>{{patent.englishTitle}}</td>
+              <td>{{patent.filingDate}}{{vm.search.clientId}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- /.box-body -->
+      </div>
+      <!-- /.box -->
+    </div>
+  <!-- /.col -->
+  </div>
+<!-- /.row -->
+</section>

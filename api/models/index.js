@@ -2,7 +2,7 @@ var mongoose = require('mongoose');
 
 require('./patent.js');
 require('./client.js');
-require('./event.js');
+require('./eventHistory.js')
 
 var gracefulShutdown = function(msg, callback){
 	mongoose.connection.close(function(){
@@ -38,8 +38,3 @@ process.on('SIGINT', function() {
 		process.exit(0);
 	});
 });
-
-
-
-	
-	
