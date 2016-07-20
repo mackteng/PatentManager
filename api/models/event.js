@@ -6,7 +6,8 @@ var eventSchema = new mongoose.Schema({
 		required: true
 	},
 	eventDeadline: Date,
-	eventNote: String
+	eventNote: String,
+	completed : Boolean
 });
 
 mongoose.model('Event', eventSchema);

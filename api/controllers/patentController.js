@@ -14,6 +14,7 @@ module.exports.listAllPatents = function(req, res){
 	// retrieve all patent applications
 	Patent
 		.find()
+		.populate('eventHistory')
 		.exec(function(err, patent){
 			if(err){
 				return sendJsonResponse(res, err, 404);

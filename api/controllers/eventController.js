@@ -37,7 +37,8 @@ module.exports.addEvent = function(req, res){
 				var event = new Event({
 					eventName : req.body.eventName,
 					eventDeadline : req.body.eventDeadline,
-					eventNote: req.body.eventNote
+					eventNote: req.body.eventNote,
+					completed: false
 				});
 				if(event.eventDeadline) patent.lastDeadline = event;
 				patent.eventHistory.eventHistory.unshift(event);
