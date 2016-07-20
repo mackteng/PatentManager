@@ -91,6 +91,16 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
   }
 
   vm.addEvent = function(){
+    if(!vm.newEvent.eventName){
+      alert('Must provide name of event');
+      return;
+    }
+
+    if(!vm.newEvent.eventDeadline){
+      alert('Must specify deadline');
+      return;
+    }
+
     console.log(vm.newEvent);
     eventService
       .addEvent(vm.patent._id, vm.newEvent)
@@ -99,7 +109,7 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
         vm.newEvent = null;
       })
       .error(function(){
-        alert('error');
+        alert('Error adding event');
       });
   };
 }
