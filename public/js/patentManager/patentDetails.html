@@ -155,7 +155,7 @@
     <!-- Event History Panel -->
     <div class="col-sm-6">
       <uib-accordion close-others="false">
-        <uib-accordion-group heading="Event Timeline" is-open="true" panel-class="panel-info">
+        <uib-accordion-group heading="Event Timeline" is-open="false" panel-class="panel-info">
           <div class="form-horizontal">
             <div class="form-group">
               <label class="col-sm-1 control-label">Event</label>
@@ -172,7 +172,7 @@
                 </p>
               </div>
             </div>
-            <textarea class="form-control" rows="3" placeholder="Notes" ng-model="vm.newEvent.eventNote"></textarea>
+            <textarea class="form-control" rows="1" placeholder="Notes" ng-model="vm.newEvent.eventNote"></textarea>
           </div>
           <button class="btn btn-primary form-control" style="margin-top:10px" ng-click="vm.addEvent()">Add new Event</button>
         </uib-accordion-group>
@@ -186,5 +186,23 @@
       </div>
     </div>
     <!-- Event History Panel End -->
+    <!-- Comment Panel Start -->
+    <div class="col-sm-6">
+      <uib-accordion close-others="false">
+        <uib-accordion-group heading="Comments" is-open="false" panel-class="panel-success">
+          <div class="form-horizontal">
+            <textarea class="form-control" rows="1" placeholder="Notes" ng-model="vm.newComment"></textarea>
+          </div>
+          <button class="btn btn-primary form-control" style="margin-top:10px" ng-click="vm.addComment()">Add comment</button>
+        </uib-accordion-group>
+      </uib-accordion>
+      <div class="eventTimeline" ng-show="vm.patent.comments && vm.patent.comments.length > 0">
+        <uib-accordion close-others="false">
+          <uib-accordion-group ng-repeat="comment in vm.patent.comments" is-disabled="true" heading="{{comment}}">
+          </uib-accordion-group>
+        </uib-accordion>
+      </div>
+    </div>
+    <!-- Comment Panel End -->
   </div>
 </div>

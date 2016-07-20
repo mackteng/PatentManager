@@ -55,7 +55,8 @@ module.exports.createPatent = function(req, res){
 		englishTitle: req.body.englishTitle,
 		chineseTitle: req.body.chineseTitle,
 		inventors: req.body.inventors,
-		active: true
+		active: true,
+		comments:[]
 	};
 
 	if(req.body.priority){

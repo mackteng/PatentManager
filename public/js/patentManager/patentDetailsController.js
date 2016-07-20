@@ -112,4 +112,10 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
         alert('Error adding event');
       });
   };
+
+  vm.addComment = function(){
+    vm.patent.comments.push(vm.newComment);
+    vm.newComment = "";
+    vm.save();
+  }
 }

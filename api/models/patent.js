@@ -71,7 +71,10 @@ var patentSchema = new mongoose.Schema({
 		required: true
 	},
   publicationDate: Date,
-  patentExpirationDate: Date
+  patentExpirationDate: Date,
+  comments:{
+    type: [String]
+  }
 });
 
 
