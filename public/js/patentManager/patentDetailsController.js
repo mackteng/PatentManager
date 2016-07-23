@@ -49,7 +49,7 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
   }
   // Inventors
   vm.addInventor = function(){
-    vm.patent.inventors.push({});
+    if(vm.editEnabled) vm.patent.inventors.push({});
   };
   vm.deleteInventor = function($index){
     vm.patent.inventors.splice($index, 1);
