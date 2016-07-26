@@ -1,3 +1,8 @@
+var jwt = require('express-jwt');
+var auth = jwt({
+  secret: process.env.JWT_SECRET,
+  userProperty: 'payload'
+});
 var express = require('express');
 var router = express.Router();
 
@@ -6,18 +11,23 @@ var router = express.Router();
 var patentController = require('../controllers/patentController.js');
 var clientController = require('../controllers/clientController.js');
 var eventController  = require('../controllers/eventController.js');
+var authController = require('../controllers/authController.js');
+
+
+router.post('/register', authController.register);
+router.post('/login', authController.login);
 
 // define api routes for patent
 router.get('/patents', patentController.listAllPatents);
 router.get('/patents/:patentid', patentController.listOnePatent);
 router.post('/patents', patentController.createPatent);
 router.put('/patents/:patentid', patentController.updatePatent);
-router.delete('/patents/:patentid', patentController.deletePatent);
+router.delete('/patents/:patentid', auth, patentController.deletePatent);
 
 // define api routes for event history
 router.get('/patents/:patentid/events', eventController.getEventHistory);
 router.post('/patents/:patentid/events', eventController.addEvent);
-router.delete('/patents/:patentid/events', eventController.deleteEvent);
+router.delete('/patents/:patentid/events', auth, eventController.deleteEvent);
 
 
 // Returns a listing of all clients

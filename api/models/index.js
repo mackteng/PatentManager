@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 
+require('./user.js');
 require('./patent.js');
 require('./client.js');
 require('./eventHistory.js')
