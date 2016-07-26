@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Patent = mongoose.model('Patent');
 var EventHistory = mongoose.model('EventHistory');
+var User = mongoose.model('User');
 
 var sendJsonResponse = function(res, payload, status){
 	res.status(status);
@@ -124,8 +125,41 @@ module.exports.updatePatent = function(req, res){
 		});
 };
 
+/* deletes a patent from the database
+ * Must be an admin to access this function
+ *
+ */
+var doDeletePatent = function(req, res, patentid){
+	if(!patentid){
+		return sendJsonResponse(res, 404, 'Patent Not Found');
+	}
+	Patent
+		.findByIdAndRemove(patentid, function(err){
+				if(err){
+					return sendJsonResponse(res, 400, err);
+				}
+				sendJsonResponse(res,204,null);
+		});
+}
 module.exports.deletePatent = function(req, res){
+	if(!req.payload || !req.payload.email){
+		return sendJsonResponse(res, 401, 'Not Authorized');
+	}
 
+	User
+		.findOne({email: req.payload.email})
+		.exec(function(err,user){
+				if(err){
+					return sendJsonResponse(res, 400, err);
+				}
 
+				if(!user){
+					return sendJsonResponse(res, 401, 'Not Authorized');
+				}
 
+				if(!user.admin){
+					return sendJsonResponse(res, 401, 'Not Authorized');
+				}
+				doDeletePatent(req.params.patentid);
+		});
 };
