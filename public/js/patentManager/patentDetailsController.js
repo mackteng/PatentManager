@@ -78,7 +78,6 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
   }
 
   vm.save = function(){
-    console.log(vm.patent);
     patentService
       .updatePatent(vm.patent, vm.patent._id)
       .success(function(){
@@ -87,6 +86,17 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
       })
       .error(function(){
         alert('error');
+      });
+  }
+
+  vm.delete = function(){
+    patentService
+      .deletePatent(vm.patent._id)
+      .success(function(){
+        alert('deleted');
+      })
+      .error(function(err){
+          alert(err);
       });
   }
 
@@ -101,7 +111,6 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
       return;
     }
 
-    console.log(vm.newEvent);
     eventService
       .addEvent(vm.patent._id, vm.newEvent)
       .success(function(){

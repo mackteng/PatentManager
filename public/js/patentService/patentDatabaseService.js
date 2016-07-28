@@ -7,7 +7,7 @@ function patentService($http, config){
   var baseUrl = config.baseUrl;
   var patentService = {};
   var updating = false;
-  
+
   patentService.listAllPatents = function(){
     //return $http.get(baseUrl + 'patents/');
     if(updating || patents == null){
@@ -31,6 +31,9 @@ function patentService($http, config){
   }
   patentService.updatePatent = function(patent, patentid){
     return $http.put(baseUrl + 'patents/' + patentid , patent);
+  }
+  patentService.deletePatent = function(patent, patentid){
+    return $http.delete(baseUrl + 'patents/' + patentid);
   }
   patentService.getAllPatents();
   return patentService;
