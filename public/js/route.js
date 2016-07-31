@@ -4,7 +4,7 @@ angular
 
 function routeConfig($stateProvider, $urlRouterProvider){
 
-    //$urlRouterProvider.otherwise('/details');
+        //$urlRouterProvider.otherwise('/details');
     $stateProvider
       .state('overview',{
         url:'/overview',
@@ -34,6 +34,12 @@ function routeConfig($stateProvider, $urlRouterProvider){
           eventHistory : getEventHistory,
           patent : allPatentsChild
         }
+      })
+      .state('login', {
+          url: '/login',
+          templateUrl: 'js/auth/login/login.html',
+          controller: loginController,
+          controllerAs: 'vm'
       });
 }
 
