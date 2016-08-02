@@ -8,26 +8,24 @@ var sendJsonResponse = function(res, payload, status){
 	res.json(payload);
 }
 
-// TODO: implement filtering
-
 module.exports.listAllPatents = function(req, res){
 
 	// retrieve all patent applications
 	Patent
 		.find()
 		.populate('eventHistory')
-		.exec(function(err, patent){
+		.exec(function(err, patents){
 			if(err){
 				return sendJsonResponse(res, err, 404);
 			}
-			sendJsonResponse(res, patent, 200);
+			sendJsonResponse(res, patents, 200);
 		});
 };
 
 module.exports.listOnePatent = function(req, res){
 
 	if(!req.params || !req.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
-		return sendJsonResponse(res, "No PatentId Specified", 400);
+		return sendJsonResponse(res, "Invalid Query", 400);
 	}
 
 	Patent
@@ -37,7 +35,7 @@ module.exports.listOnePatent = function(req, res){
 				return sendJsonResponse(res, err, 400);
 			}
 			if(!patent){
-				return sendJsonResponse(res, "no such patent", 404);
+				return sendJsonResponse(res, "No Such Patent Found", 404);
 			}
 			sendJsonResponse(res, patent, 200);
 		});
@@ -129,37 +127,18 @@ module.exports.updatePatent = function(req, res){
  * Must be an admin to access this function
  *
  */
-var doDeletePatent = function(req, res, patentid){
-	if(!patentid){
-		return sendJsonResponse(res, 404, 'Patent Not Found');
+module.exports.deletePatent = function(req, res){
+	if(!req.params || !req.params.patentid){
+		return sendJsonResponse(res, 400, 'Invalid Request');
+	}
+	if(!req.params.patentid){
+		return sendJsonResponse(res, 404, 'No Such Patent Found');
 	}
 	Patent
-		.findByIdAndRemove(patentid, function(err){
+		.findByIdAndRemove(req.params.patentid, function(err){
 				if(err){
 					return sendJsonResponse(res, 400, err);
 				}
-				sendJsonResponse(res,204,null);
-		});
-}
-module.exports.deletePatent = function(req, res){
-	if(!req.payload || !req.payload.email){
-		return sendJsonResponse(res, 401, 'Not Authorized');
-	}
-
-	User
-		.findOne({email: req.payload.email})
-		.exec(function(err,user){
-				if(err){
-					return sendJsonResponse(res, 400, err);
-				}
-
-				if(!user){
-					return sendJsonResponse(res, 401, 'Not Authorized');
-				}
-
-				if(!user.admin){
-					return sendJsonResponse(res, 401, 'Not Authorized');
-				}
-				doDeletePatent(req.params.patentid);
+				sendJsonResponse(res,null,204);
 		});
 };

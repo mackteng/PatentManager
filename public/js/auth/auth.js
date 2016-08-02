@@ -1,10 +1,10 @@
 angular
   .module('patentApp')
-  .service('authentication', authentication);
+  .factory('authentication', ['$window', 'config', '$http', authentication]);
 
-  authentication.$inject=['$window', 'config'];
+  //authentication.$inject=['$window', 'config', '$http'];
 
-  function authentication($window, config){
+  function authentication($window, config, $http){
     var baseUrl = config.baseUrl;
     var saveToken = function(token){
         $window.localStorage["token"] = token;

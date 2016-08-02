@@ -35,7 +35,8 @@ userSchema.methods.generateJWT = function(){
     _id: this._id,
     email: this.email,
     name: this.name,
-    admin: this.admin
+    admin: this.admin,
+    exp: parseInt(expiryDate.getTime() / 1000)
   },process.env.JWT_SECRET);
 }
 

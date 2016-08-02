@@ -1,19 +1,27 @@
 angular
   .module('patentApp')
-  .factory('eventService', ['$http', 'config', eventService]);
+  .factory('eventService', ['$http', 'config', 'authentication', eventService]);
 
-function eventService($http, config){
+function eventService($http, config, authentication){
 
   var baseUrl = config.baseUrl;
 
   var eventService = {};
 
   eventService.getEventHistory = function(patentId){
-    return $http.get(baseUrl + '/patents/' + patentId + '/events');
+    return $http.get(baseUrl + '/patents/' + patentId + '/events', {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
   };
 
   eventService.addEvent = function(patentId, event){
-    return $http.post(baseUrl + '/patents/' + patentId + '/events', event);
+    return $http.post(baseUrl + '/patents/' + patentId + '/events', event, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
   }
   return eventService;
 }

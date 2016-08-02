@@ -1,8 +1,8 @@
 angular
   .module('patentApp')
-  .factory('patentService', ['$http', 'config', patentService]);
+  .factory('patentService', ['$http', 'config', 'authentication', patentService]);
 
-function patentService($http, config){
+function patentService($http, config, authentication){
   var patents = null;
   var baseUrl = config.baseUrl;
   var patentService = {};
@@ -18,7 +18,11 @@ function patentService($http, config){
   }
   patentService.getAllPatents = function(){
     return $http
-      .get(baseUrl + 'patents/')
+      .get(baseUrl + 'patents/', {
+        headers:{
+            Authorization: 'Bearer ' + authentication.getToken()
+        }
+      })
       .then(function(allPatents){
           patents = allPatents;
           return allPatents;
@@ -27,13 +31,25 @@ function patentService($http, config){
       });
   }
   patentService.addNewPatent = function(patent){
-    return $http.post(baseUrl + 'patents/', patent);
+    return $http.post(baseUrl + 'patents/', patent, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
   }
   patentService.updatePatent = function(patent, patentid){
-    return $http.put(baseUrl + 'patents/' + patentid , patent);
+    return $http.put(baseUrl + 'patents/' + patentid , patent, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
   }
   patentService.deletePatent = function(patent, patentid){
-    return $http.delete(baseUrl + 'patents/' + patentid);
+    return $http.delete(baseUrl + 'patents/' + patentid, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
   }
   patentService.getAllPatents();
   return patentService;

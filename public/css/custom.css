@@ -25,6 +25,10 @@
   bottom: 0px;
 }
 
-textarea { 
+textarea {
   resize:none ;
+}
+
+.login-box{
+  margin: auto;
 }

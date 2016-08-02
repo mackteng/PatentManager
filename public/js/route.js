@@ -4,7 +4,6 @@ angular
 
 function routeConfig($stateProvider, $urlRouterProvider){
 
-        //$urlRouterProvider.otherwise('/details');
     $stateProvider
       .state('overview',{
         url:'/overview',
@@ -38,10 +37,23 @@ function routeConfig($stateProvider, $urlRouterProvider){
       .state('login', {
           url: '/login',
           templateUrl: 'js/auth/login/login.html',
-          controller: loginController,
+          controller: 'loginController',
           controllerAs: 'vm'
       });
 }
+
+angular
+  .module('patentApp')
+  .run(['$rootScope', '$state', '$location', 'authentication', function($rootScope, $state, $location, authentication){
+      $rootScope.$on('$stateChangeStart', function (event, toState, toParams, fromState){
+          if(toState.name != 'login' && !authentication.isLoggedIn()){
+              $state.go('login');
+              event.preventDefault();
+              return;
+          }
+      });
+  }]);
+
 
 getEventHistory.$inject = ['eventService', '$stateParams'];
 function getEventHistory(eventService, $stateParams){
