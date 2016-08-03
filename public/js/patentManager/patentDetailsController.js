@@ -116,6 +116,7 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
       .success(function(){
         vm.eventHistory.unshift(vm.newEvent);
         vm.newEvent = null;
+        patentService.markUpdated();
       })
       .error(function(){
         alert('Error adding event');

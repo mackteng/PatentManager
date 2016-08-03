@@ -51,6 +51,10 @@ function patentService($http, config, authentication){
       }
     });
   }
+
+  patentService.markUpdated = function(){
+    updating = true;
+  }
   patentService.getAllPatents();
   return patentService;
 }

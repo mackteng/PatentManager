@@ -79,19 +79,19 @@
             <thead>
             <tr>
               <th class="col-xs-1">Docket Number</th>
-              <th class="col-xs-1">Client Name</th>
               <th class="col-xs-1">Application Type </th>
-              <th class="col-xs-7" ng-click="vm.changeOrder('englishTitle')">Title</th>
+              <th class="col-xs-4" ng-click="vm.changeOrder('englishTitle')">English Title</th>
+              <th class="col-xs-4" ng-click="vm.changeOrder('chineseTitle')">Chinese Title</th>
               <th class="col-xs-2">Status</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat='patent in vm.patents | filter:vm.search | orderBy: vm.orderProperty : vm.reverse'>
-              <td><a ng-href="#/manage/{{patent._id}}">{{patent.clientId}}_{{patent.docketNumber}}_{{patent.country | uppercase}}</a></td>
-              <td>{{patent.clientId}}</td>
+              <td><a ng-href="#/manage/{{patent._id}}">{{patent.clientId}}.{{patent.docketNumber}}.{{patent.country | uppercase}}</a></td>
               <td>{{patent.applicationType}}</td>
               <td>{{patent.englishTitle}}</td>
-              <td>{{patent.filingDate}}{{vm.search.clientId}}</td>
+              <td>{{patent.chineseTitle}}</td>
+              <td>{{patent.lastDeadline.eventName}}</td>
             </tr>
           </tbody>
         </table>
