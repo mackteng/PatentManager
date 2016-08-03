@@ -63,7 +63,7 @@
         <div class="form-group">
           <label class="col-sm-2 control-label">Priority</label>
           <div class="col-sm-1">
-            <input type="checkbox" ng-model="vm.enablePriorityForm" ng-change="vm.clearPriority()">
+            <input type="checkbox" ng-model="vm.enablePriorityForm" ng-change="vm.clearPriority()" ng-disabled="!vm.editEnabled">
           </div>
         </div>
         <div class="form-group" ng-show="vm.enablePriorityForm">
@@ -94,7 +94,7 @@
         <!-- Inventors Information -->
         <div class="form-group">
           <label class="col-sm-2 control-label">Inventors</label>
-          <a class="btn btn-xs btn-warning col-sm-offset-1 col-sm-8" ng-click="vm.addInventor()">Add Inventor</a>
+          <a class="btn btn-xs btn-warning col-sm-offset-1 col-sm-8" ng-click="vm.addInventor()" ng-disabled="!vm.editEnabled">Add Inventor</a>
         </div>
           <!-- Inventors Form -->
         <div class="form-group" ng-repeat="inventor in vm.patent.inventors">
@@ -121,14 +121,14 @@
       <hr>
           <!-- Inventors Form End -->
         <!-- Inventors Information End -->
-        <!-- Active -->
+        <!-- Status -->
         <div class="form-group">
-          <label class="col-sm-2 control-label">Active</label>
-          <div class="col-lg-9">
-            <input type="checkbox" name="MyCheckBox" ng-model="vm.patent.active">
-          </div>
+          <label class="col-sm-2 control-label">Status</label>
+          <a class="btn btn-sm btn-primary col-sm-offset-1 col-sm-2" ng-disabled="vm.displayStatus('Active')" ng-click="vm.changeStatus('Active')">Active</a>
+          <a class="btn btn-sm btn-danger col-sm-offset-1 col-sm-2" ng-disabled="vm.displayStatus('Abandoned')" ng-click="vm.changeStatus('Abandoned')">Abandoned</a>
+          <a class="btn btn-sm btn-success col-sm-offset-1 col-sm-2" ng-disabled="vm.displayStatus('Allowed')" ng-click="vm.changeStatus('Allowed')">Allowed</a>
         </div>
-        <!-- Active End -->
+        <!-- Status End -->
         <hr>
         <!-- Edit/Cancel Button -->
         <div class="form-group" ng-show="!vm.editEnabled">

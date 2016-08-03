@@ -66,8 +66,9 @@ var patentSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'EventHistory'
   },
-	active : {
-		type: Boolean,
+	status : {
+		type: String,
+    enum: ['Active', 'Abandoned', 'Allowed'],
 		required: true
 	},
   publicationDate: Date,

@@ -80,9 +80,10 @@
             <tr>
               <th class="col-xs-1">Docket Number</th>
               <th class="col-xs-1">Application Type </th>
-              <th class="col-xs-4" ng-click="vm.changeOrder('englishTitle')">English Title</th>
+              <th class="col-xs-3" ng-click="vm.changeOrder('englishTitle')">English Title</th>
               <th class="col-xs-4" ng-click="vm.changeOrder('chineseTitle')">Chinese Title</th>
-              <th class="col-xs-2">Status</th>
+              <th class="col-xs-2">Deadline</th>
+              <th class="col-xs-1">Status</th>
             </tr>
             </thead>
             <tbody>
@@ -92,6 +93,7 @@
               <td>{{patent.englishTitle}}</td>
               <td>{{patent.chineseTitle}}</td>
               <td>{{patent.lastDeadline.eventName}}</td>
+              <td>{{patent.status}}</td>
             </tr>
           </tbody>
         </table>

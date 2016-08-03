@@ -115,6 +115,7 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
       .addEvent(vm.patent._id, vm.newEvent)
       .success(function(){
         vm.eventHistory.unshift(vm.newEvent);
+        vm.lastDeadline = vm.newEvent;
         vm.newEvent = null;
         patentService.markUpdated();
       })
@@ -127,5 +128,13 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
     vm.patent.comments.push(vm.newComment);
     vm.newComment = "";
     vm.save();
+  }
+
+  vm.displayStatus = function(status){
+    return !(status === vm.patent.status);
+  }
+
+  vm.changeStatus = function(status){
+    if(vm.editEnabled) vm.patent.status = status;
   }
 }
