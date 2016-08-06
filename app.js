@@ -13,6 +13,7 @@ var models = require('./api/models');
 var api = require('./api/routes/index');
 // require strategy
 require('./api/config/passport');
+require('./services/notification/notification.js'); 
 
 var app = express();
 

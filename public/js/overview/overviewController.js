@@ -43,7 +43,7 @@ function overviewController(allPatents){
         vm.eventSources.events.push(
           {
               title : vm.patents[i].eventHistory.eventHistory[j].eventName,
-              start : vm.patents[i].eventHistory.eventHistory[j].eventDeadline,
+              start : new Date(vm.patents[i].eventHistory.eventHistory[j].eventDeadline),
               url   : 'starter.html#/manage/' + vm.patents[i]._id
           }
         );

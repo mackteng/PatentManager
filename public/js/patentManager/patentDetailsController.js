@@ -55,7 +55,6 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
     vm.patent.inventors.splice($index, 1);
   };
 
-  vm.newEvent = {};
 
   // Timeline options
   vm.status = {

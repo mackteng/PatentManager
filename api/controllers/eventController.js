@@ -19,6 +19,7 @@ module.exports.getEventHistory = function(req, res){
     .select('eventHistory')
     .exec(function(err, patent){
       if(err) return sendJsonResponse(res, err, 400);
+			if(!patent || !patent.eventHistory) return sendJsonResponse(res, [], 404);
       sendJsonResponse(res, patent.eventHistory, 200);
     });
 };

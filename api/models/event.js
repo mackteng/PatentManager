@@ -10,4 +10,6 @@ var eventSchema = new mongoose.Schema({
 	completed : Boolean
 });
 
+module.exports = eventSchema;
+
 mongoose.model('Event', eventSchema);
