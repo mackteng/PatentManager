@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Patent = mongoose.model('Patent');
-var EventHistory = mongoose.model('EventHistory');
 var User = mongoose.model('User');
 
 var sendJsonResponse = function(res, payload, status){
@@ -13,7 +12,6 @@ module.exports.listAllPatents = function(req, res){
 	// retrieve all patent applications
 	Patent
 		.find()
-		.populate('eventHistory')
 		.exec(function(err, patents){
 			if(err){
 				return sendJsonResponse(res, err, 404);
@@ -67,22 +65,10 @@ module.exports.createPatent = function(req, res){
 	}
 	Patent.create(patent, function(err, patent){
 		if(err){
+			console.log(err);
 			return sendJsonResponse(res, err, 400);
 		}
-		var newEventHistory = new EventHistory({patentId : patent._id});
-
-		newEventHistory.save(function(err, eventHistory){
-				if(err){
-					return sendJsonResponse(res, err, 400);
-				}
-				patent.eventHistory = eventHistory._id;
-				patent.save(function(err, patent){
-					if(err){
-						return sendJsonResponse(res, err, 400);
-					}
-					sendJsonResponse(res, patent, 200);
-				});
-		});
+		return sendJsonResponse(res, patent, 200);
 	});
 };
 

@@ -8,7 +8,7 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
   var vm = this;
   vm.patents = patent.allPatents;
   vm.patent = null;
-  vm.eventHistory = eventHistory.data.eventHistory;
+  vm.eventHistory = eventHistory.data;
 
 
   for(var i = 0; i < vm.patents.length; i++){
@@ -83,8 +83,8 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
         angular.copy(vm.patent, vm.oldPatent);
         vm.editEnabled = false;
       })
-      .error(function(){
-        alert('error');
+      .error(function(err){
+        alert(err);
       });
   }
 
@@ -95,7 +95,7 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
         alert('deleted');
       })
       .error(function(err){
-          alert(err);
+          console.log(err);
       });
   }
 

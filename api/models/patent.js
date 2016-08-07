@@ -62,10 +62,6 @@ var patentSchema = new mongoose.Schema({
   lastDeadline : {
     type: Event
   },
-	eventHistory : {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'EventHistory'
-  },
 	status : {
 		type: String,
     enum: ['Active', 'Abandoned', 'Allowed'],
@@ -80,7 +76,7 @@ var patentSchema = new mongoose.Schema({
 
 
 // set compound index for clientID and clientDocketNumber
-patentSchema.index({"clientID" : 1, "docketNumber" : 1}, {unique: true});
+patentSchema.index({"clientID" : 1, "docketNumber" : 1, "country" : 1}, {unique: true});
 
 // set virtual getter for full docket
 patentSchema.virtual('FullDocketNumber').get(function(){

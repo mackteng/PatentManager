@@ -1,6 +1,5 @@
 var mongoose = require('mongoose');
 var Patent = mongoose.model('Patent');
-var EventHistory = mongoose.model('EventHistory');
 var Event = mongoose.model('Event');
 
 var sendJsonResponse = function(res, payload, status){
@@ -8,19 +7,33 @@ var sendJsonResponse = function(res, payload, status){
 	res.json(payload);
 }
 
-// retrieve Event History Container
+// retrieve all events
+module.exports.listAllEvents = function(req, res){
+	Event
+		.find()
+		.exec(function(err,events){
+			if(err){
+				return sendJsonResponse(res, err, 400);
+			}
+			return sendJsonResponse(res, events, 200);
+		});
+	}
+
+
+// retrieve all events for given patentID
 module.exports.getEventHistory = function(req, res){
   if(!req.params || !req.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
     return sendJsonResponse(res, "No PatentId Specified", 400);
   }
-  Patent
-    .findById(req.params.patentid)
-		.populate('eventHistory')
-    .select('eventHistory')
-    .exec(function(err, patent){
+  Event
+    .find({
+			patentID: req.params.patentid
+		})
+    .exec(function(err, events){
+			console.log(err);
       if(err) return sendJsonResponse(res, err, 400);
-			if(!patent || !patent.eventHistory) return sendJsonResponse(res, [], 404);
-      sendJsonResponse(res, patent.eventHistory, 200);
+			if(!events) return sendJsonResponse(res, [], 404);
+      sendJsonResponse(res, events, 200);
     });
 };
 
@@ -29,47 +42,32 @@ module.exports.addEvent = function(req, res){
   if(!req.params || !req.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
 		return sendJsonResponse(res, "No PatentId Specified", 400);
 	}
-	Patent
-		.findById(req.params.patentid)
-		.populate('eventHistory')
-		.select('eventHistory lastEvent')
-		.exec(function(err, patent){
-				if(err) return sendJsonResponse(res, err, 400);
-				var event = new Event({
-					eventName : req.body.eventName,
-					eventDeadline : req.body.eventDeadline,
-					eventNote: req.body.eventNote,
-					completed: false
-				});
-				if(event.eventDeadline) patent.lastDeadline = event;
-				patent.eventHistory.eventHistory.unshift(event);
-				patent.eventHistory.save(function(err, history){
-					if(err) return sendJsonResponse(res, err, 400);
-				});
-				patent.save(function(err, history){
-							if(err) return sendJsonResponse(res, err, 400);
-							sendJsonResponse(res, history, 200);
-						})
-				});
+
+	var newEvent = new Event({
+			patentID : req.params.patentid,
+			eventName : req.body.eventName,
+			eventDeadline : req.body.eventDeadline,
+			eventNote: req.body.eventNote,
+			completed: false
+	});
+
+	newEvent.save(function(err, event){
+		if(err) return sendJsonResponse(res,err,400);
+		sendJsonResponse(res, event, 200);
+	});
 };
 
 // delete Event from Event History Container
 module.exports.deleteEvent = function(req, res){
-  if(!req.params || !req.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
+  if(!req.params || !req.params.eventid || !mongoose.Types.ObjectId.isValid(req.params.eventid)){
 		return sendJsonResponse(res, "No PatentId Specified", 400);
 	}
 
-	PatentId
-		.findById(req.params.patentid)
-		.populate('eventHistory')
-		.select('eventHistory')
-		.exec(function(err, patent){
-			if(err) return sendJsonResponse(res, err, 400);
-			var history = patent.eventHistory.eventHistory;
-			history.splice(0,1);
-			patent.eventHistory.save(function(err, history){
-					if(err) return sendJsonResponse(res, err, 400);
-					sendJsonResponse(res, history, 200);
-			});
-		});
+	Event
+	.findByIdAndRemove(req.params.eventid, function(err){
+		if(err){
+			return sendJsonResponse(res, 400, err);
+		}
+		sendJsonResponse(res,null,204);
+	});
 };

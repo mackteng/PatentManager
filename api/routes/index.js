@@ -52,7 +52,9 @@ router.delete('/patents/:patentid', auth, userExists, isAdmin, patentController.
 // define api routes for event history
 router.get('/patents/:patentid/events', auth, userExists,eventController.getEventHistory);
 router.post('/patents/:patentid/events', auth, userExists,eventController.addEvent);
-router.delete('/patents/:patentid/events', auth, userExists, eventController.deleteEvent);
+
+router.get('/events', auth, userExists, eventController.listAllEvents);
+router.delete('/events/:eventid', auth, userExists, eventController.deleteEvent);
 
 
 // Returns a listing of all clients

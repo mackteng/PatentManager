@@ -2,18 +2,11 @@ angular
   .module('patentApp')
   .controller('overviewController', overviewController);
 
-overviewController.$inject=['allPatents'];
+overviewController.$inject=['allEvents'];
 
-function constructCalendarEvent(lastEvent){
-  calendarEvent = {};
-  calendarEvent.title = lastEvent.eventName;
-  calendarEvent.start = lastEvent.eventDeadline;
-  return calendarEvent;
-}
-
-function overviewController(allPatents){
+function overviewController(allEvents){
   var vm = this;
-  vm.patents = allPatents.data;
+  vm.events = allEvents.data;
   vm.eventSources = {events:[]}
   vm.config = {
     calendar:{
@@ -26,29 +19,16 @@ function overviewController(allPatents){
     }
   }
 
-  console.log(vm.patents);
   // populate events
-  for(var i = 0; i < vm.patents.length; i++){
-    /*if(vm.patents[i].lastDeadline && vm.patents[i].lastDeadline.eventDeadline){
-      //vm.eventSources.events.push(constructCalendarEvent(vm.patents[i].lastDeadline));
-      vm.eventSources.events.push({
-          title : vm.patents[i].lastDeadline.eventName,
-          start : vm.patents[i].lastDeadline.eventDeadline,
-          url   : 'starter.html#/manage/' + vm.patents[i]._id
-      });
-    }*/
-    if(!vm.patents[i].eventHistory) continue;
-    for(var j = 0; j < vm.patents[i].eventHistory.eventHistory.length; j++){
-      if(vm.patents[i].eventHistory.eventHistory[j].completed == false){
-        vm.eventSources.events.push(
-          {
-              title : vm.patents[i].eventHistory.eventHistory[j].eventName,
-              start : new Date(vm.patents[i].eventHistory.eventHistory[j].eventDeadline),
-              url   : 'starter.html#/manage/' + vm.patents[i]._id
-          }
-        );
-      }
+  for(var i = 0; i < vm.events.length; i++){
+    if(vm.events[i].completed == false){
+      vm.eventSources.events.push(
+        {
+            title : vm.events[i].eventName,
+            start : new Date(vm.events[i].eventDeadline),
+            url   : 'starter.html#/manage/' + vm.events[i].patentID
+        }
+      );
     }
   }
-  console.log(vm.eventSources);
 }

@@ -8,6 +8,14 @@ function eventService($http, config, authentication){
 
   var eventService = {};
 
+  eventService.listAllEvents = function(){
+    return $http.get(baseUrl + '/events', {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  };
+
   eventService.getEventHistory = function(patentId){
     return $http.get(baseUrl + '/patents/' + patentId + '/events', {
       headers:{

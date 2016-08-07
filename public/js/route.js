@@ -11,7 +11,7 @@ function routeConfig($stateProvider, $urlRouterProvider){
         controller: 'overviewController',
         controllerAs: 'vm',
         resolve:{
-          allPatents : allPatents
+          allEvents  : allEvents
         }
       })
       .state('manage',{
@@ -54,6 +54,10 @@ angular
       });
   }]);
 
+allEvents.$inject=['eventService'];
+function allEvents(eventService){
+  return eventService.listAllEvents();
+}
 
 getEventHistory.$inject = ['eventService', '$stateParams'];
 function getEventHistory(eventService, $stateParams){

@@ -56,20 +56,12 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
 
   // Submit patent application
   vm.submit = function(){
-    //alert(JSON.stringify(vm.patent, null, 4));
-    // validate
-    //if(!vm.clientId || !vm.docketNumber || !vm.country || !vm.filingDate || !vm.filingNumber || !vm.applicationType || !vm.englishTitle){
-    //  vm.setMessage('danger', 'Please fill in the required fields!');
-    //  return false;
-    //}
-    // send
     patentService
       .addNewPatent(vm.patent)
       .success(function(data){
         $uibModalInstance.close(data);
       })
       .error(function(err){
-        console.log(err);
         vm.setMessage('danger', 'ERROR  : ' + err.message);
       });
   };
