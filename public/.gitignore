@@ -39,7 +39,6 @@ Icon
 .Trashes
 
 # Dist Directory
-/dist
 
 # Node modules
 /node_modules

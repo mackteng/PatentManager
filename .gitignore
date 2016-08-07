@@ -19,7 +19,6 @@ coverage/
 
 # MEAN.js app and assets
 # ======================
-public/dist/
 public/src
 uploads
 modules/users/client/img/profile/uploads
@@ -43,7 +42,6 @@ _site/
 *.swp
 .env
 logs/
-build/
 
 # Sublime editor
 # ==============
