@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-    "postinstall" : "./public.sh",
+    "postinstall" : "sh ./public.sh"
   },
   "dependencies": {
     "body-parser": "~1.13.2",
