@@ -3,7 +3,6 @@ var mongoose = require('mongoose');
 require('./user.js');
 require('./patent.js');
 require('./client.js');
-require('./email.js');
 
 var gracefulShutdown = function(msg, callback){
 	mongoose.connection.close(function(){

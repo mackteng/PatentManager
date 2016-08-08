@@ -32,3 +32,11 @@ textarea {
 .login-box{
   margin: auto;
 }
+
+.multiselect-parent, .btn-group, .dropdown-multiselect{
+  width:100%;
+}
+
+.multiselect-parent, .btn-group, .dropdown-multiselect button{
+  width:100%;
+}

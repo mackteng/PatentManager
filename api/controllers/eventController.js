@@ -48,6 +48,8 @@ module.exports.addEvent = function(req, res){
 			eventName : req.body.eventName,
 			eventDeadline : req.body.eventDeadline,
 			eventNote: req.body.eventNote,
+			notificationEmails: req.body.notificationEmails,
+			notificationDates: req.body.notificationDates,
 			completed: false
 	});
 

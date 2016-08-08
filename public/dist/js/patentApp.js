@@ -1,4 +1,4 @@
-angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar']);
+angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar','angularjs-dropdown-multiselect']);
 ;angular
   .module('patentApp')
   .factory('authentication', ['$window', 'config', '$http', authentication]);
@@ -250,14 +250,13 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
   .module('patentApp')
   .controller('patentDetailsController', patentDetailsController);
 
-patentDetailsController.$inject = ['$stateParams', 'patent', 'eventHistory', 'eventService', 'patentService'];
+patentDetailsController.$inject = ['$scope','$stateParams', 'patent', 'eventHistory', 'eventService', 'patentService'];
 
-function patentDetailsController($stateParams, patent, eventHistory, eventService, patentService){
+function patentDetailsController($scope, $stateParams, patent, eventHistory, eventService, patentService){
   var vm = this;
   vm.patents = patent.allPatents;
   vm.patent = null;
   vm.eventHistory = eventHistory.data;
-
 
   for(var i = 0; i < vm.patents.length; i++){
     if(vm.patents[i]._id == $stateParams.id){
@@ -275,6 +274,7 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
   for(i = 0; i < vm.eventHistory.length; i++){
     vm.eventHistory[i].eventDeadline = new Date(vm.eventHistory[i].eventDeadline);
   }
+
 
   vm.enablePriorityForm = vm.patent.priority!=null;
   //list of countries
@@ -347,7 +347,33 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
       });
   }
 
+  vm.newEvent = {
+    notificationEmails:[],
+    notificationDates:[]
+  };
+  vm.emailsList = [
+    {
+      id:1,
+      label: 'janiceshih@litron-intl.com'
+    },
+    {
+      id:2,
+      label: 'mackteng@litron-intl.com'
+    },
+    {
+      id:3,
+      label: 'miketeng@litron-intl.com'
+    },
+    {
+      id:4,
+      label: 'wilasato@litron-intl.com'
+    }
+  ];
+  vm.multiSettings = {displayProp: 'label', idProp: 'label'};
+  vm.multiSettingsDate = {displayProp: 'label', idProp: 'date'};
+
   vm.addEvent = function(){
+    console.log(vm.newEvent);
     if(!vm.newEvent.eventName){
       alert('Must provide name of event');
       return;
@@ -358,12 +384,22 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
       return;
     }
 
+    vm.newEvent.eventName = vm.patent.clientId + '.' + vm.patent.docketNumber + '.' +vm.patent.country.toUpperCase() + ' ' + vm.newEvent.eventName;
+    for(var i = 0; i < vm.newEvent.notificationEmails.length; i++){
+      vm.newEvent.notificationEmails[i] = vm.newEvent.notificationEmails[i].id;
+    }
+    for(var i = 0; i < vm.newEvent.notificationDates.length; i++){
+      vm.newEvent.notificationDates[i] = vm.newEvent.notificationDates[i].id;
+    }
     eventService
       .addEvent(vm.patent._id, vm.newEvent)
       .success(function(){
         vm.eventHistory.unshift(vm.newEvent);
         vm.lastDeadline = vm.newEvent;
-        vm.newEvent = null;
+        vm.newEvent = {
+          notificationEmails:[],
+          notificationDates:[]
+        };
         patentService.markUpdated();
       })
       .error(function(){
@@ -384,6 +420,32 @@ function patentDetailsController($stateParams, patent, eventHistory, eventServic
   vm.changeStatus = function(status){
     if(vm.editEnabled) vm.patent.status = status;
   }
+
+  $scope.$watch('vm.newEvent.eventDeadline', function(current, original){
+    vm.datesList = [];
+    var index = 0;
+
+    // add 1-6 days before
+    for(var i = 1; i <= 6; i++){
+      var date = new Date(current);
+      date.setDate(date.getDate()-i);
+      vm.datesList.push({
+        id: index++,
+        label: i + ' day(s) before',
+        date: date
+      });
+    };
+    // add 1-8 weeks before
+    for(var i = 1; i <= 8; i++){
+      var date = new Date(current);
+      date.setDate(date.getDate()-(i*7));
+      vm.datesList.push({
+        id: index++,
+        label: i + ' week(s) before',
+        date: date
+      });
+    };
+  });
 }
 ;angular.module('patentApp').controller('patentController', patentController);
 patentController.$inject=['allPatents', 'allClients', '$uibModal', '$log'];

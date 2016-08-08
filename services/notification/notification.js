@@ -1,6 +1,6 @@
 require('dotenv').load();
 var mongoose = require('mongoose');
-var Email = mongoose.model('Email');
+var Event = mongoose.model('Event');
 var schedule = require('node-schedule');
 var table = {};
 
@@ -27,52 +27,53 @@ var generateEmailFunction = function(event, emailAddress){
   }
 }
 
+var scheduleEvent = function(event){
+  console.log(event);
+  if(!event.completed){
+    if(!table[event._id]){
+      table[event._id] = [];
+    }
+    for(var j = 0; j < event.notificationDates.length; j++){
+      for(var k = 0; k < event.notificationEmails.length; k++){
+        console.log('Scheduling Job For Event ' + event._id + ' for ' + event.notificationEmails[k] + ' on ' + event.notificationDates[j]);
+        var job = schedule.scheduleJob(new Date(event.notificationDates[j]), function(){
+          generateEmailFunction(event, event.notificationEmails[k])();
+        });
+        table[event._id].push(job);
+      }
+    }
+  }
+}
+
 var populateTable = function(){
-  Email
+  Event
     .find()
-    .exec(function(err,emails){
-      if(!err){
-          console.log(emails);
+    .exec(function(err,events){
+      if(err){
+        console.log(err);
+        return;
+      }
+      for(var i = 0; i < events.length; i++){
+        scheduleEvent(events[i]);
       }
     });
 };
-populateTable();
-module.exports.scheduleEventNotification = function(event,emailAddress){
-  var email = new Email({
-    notifyEvent : event,
-    emailAddress: emailAddress
-  });
-  email.save(function(err,email){
-    if(!err){
-      // schedule le job
-      var job = schedule.scheduleJob(new Date(email.eventDeadline), function(){
-        // send off the email
-        generateEmailFunction(event,emailAddress)();
-        // if last email in notification queue, delete email from database and in-memory table
+
+module.exports.updatePatent = function(eventid){
 
 
-      });
-      // store in in-memory table for easy reference
-      if(!table['email.eventID']){
-        table[email.eventId] = [];
-      }
-      table[email.eventId].push(job);
+
+
+}
+
+module.exports.deleteEvent = function(eventid){
+  if(table[eventid]){
+    for(var i = 0; i < eventid; i++){
+      table[eventid].cancel();
     }
-  });
-};
-
-module.exports.rescheduleEventNotification = function(newEvent, oldEventId){
-
+    delete table[eventid];
+  }
 }
 
-module.exports.cancelEventNotification = function(eventID){
-  Email
-		.findByIdAndRemove(eventID, function(err){
-				if(!err){
-					for(var i = 0; i < table[eventID].length; i++){
-            table[eventID][i].cancel();
-          }
-          delete table[eventID];
-				}
-		});
-}
+
+populateTable();

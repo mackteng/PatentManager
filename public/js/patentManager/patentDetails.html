@@ -158,12 +158,12 @@
         <uib-accordion-group heading="Event Timeline" is-open="false" panel-class="panel-info">
           <div class="form-horizontal">
             <div class="form-group">
-              <label class="col-sm-1 control-label">Event</label>
+              <label class="col-sm-2 control-label">Event</label>
               <div class="col-sm-4">
                 <input class="form-control" ng-model="vm.newEvent.eventName">
               </div>
               <label class="col-sm-2 control-label">Deadline Date</label>
-              <div class="col-sm-5">
+              <div class="col-sm-4">
                 <p class="input-group">
                   <input type="text" class="form-control" uib-datepicker-popup ng-model="vm.newEvent.eventDeadline" is-open="vm.picker3" datepicker-options="vm.dateOptions" close-text="Close"/>
                   <span class="input-group-btn">
@@ -172,6 +172,14 @@
                 </p>
               </div>
             </div>
+            <!-- Email and date section -->
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Notify</label>
+              <div class="col-sm-4" ng-dropdown-multiselect="" options="vm.emailsList" selected-model="vm.newEvent.notificationEmails" extra-settings="vm.multiSettings"></div>
+              <label class="col-sm-2 control-label">On</label>
+              <div class="col-sm-4" ng-dropdown-multiselect="" options="vm.datesList" selected-model="vm.newEvent.notificationDates" extra-settings="vm.multiSettingsDate"></div>
+            </div>
+            <!-- Email and date section -->
             <textarea class="form-control" rows="1" placeholder="Notes" ng-model="vm.newEvent.eventNote"></textarea>
           </div>
           <button class="btn btn-primary form-control" style="margin-top:10px" ng-click="vm.addEvent()">Add new Event</button>
@@ -180,14 +188,25 @@
       <div class="eventTimeline" ng-show="vm.eventHistory && vm.eventHistory.length > 0">
         <uib-accordion close-others="false">
           <uib-accordion-group ng-repeat="event in vm.eventHistory" is-open="true" heading="{{event.eventName}}   {{event.eventDeadline | date:'MM/dd/yyyy'}}">
-             {{event.eventNote}}
+             <div class="row">
+               <label class="col-sm-1">Note:</label>
+               <p style="width:100%;display:inline;">{{event.eventNote}}</p>
+             </div>
+             <div class="row">
+               <label class="col-sm-1 control-label">Emails:</label>
+               <p style="width:100%;display:inline;" ng-repeat="email in event.notificationEmails"> {{email}} | </p>
+             </div>
+             <div class="row">
+               <label class="col-sm-1 control-label">Dates:</label>
+               <p style="width:100%;display:inline;" ng-repeat="date in event.notificationDates"> {{date | date:"MM/dd/yyyy"}} | </p>
+             </div>
           </uib-accordion-group>
         </uib-accordion>
       </div>
     </div>
     <!-- Event History Panel End -->
     <!-- Comment Panel Start -->
-    <div class="col-sm-6">
+    <div class="col-sm-6" style="float:right">
       <uib-accordion close-others="false">
         <uib-accordion-group heading="Comments" is-open="false" panel-class="panel-success">
           <div class="form-horizontal">
@@ -198,7 +217,7 @@
       </uib-accordion>
       <div class="eventTimeline" ng-show="vm.patent.comments && vm.patent.comments.length > 0">
         <uib-accordion close-others="false">
-          <uib-accordion-group ng-repeat="comment in vm.patent.comments" is-disabled="true" heading="{{comment}}">
+          <uib-accordion-group ng-repeat="comment in vm.patent.comments track by $index" is-disabled="true" heading="{{comment}}">
           </uib-accordion-group>
         </uib-accordion>
       </div>

@@ -14,6 +14,8 @@ var eventSchema = new mongoose.Schema({
 		required: true
 	},
 	eventNote: String,
+	notificationDates: [Date],
+	notificationEmails:[String],
 	completed : Boolean
 });
 
