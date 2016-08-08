@@ -7,8 +7,7 @@
     "url": "git://github.com/almasaeed2010/AdminLTE.git"
   },
   "license": "MIT",
-  "devDependencies": {
-    "R2": "^1.4.3",
+  "dependencies": {
     "grunt": "~0.4.5",
     "grunt-bootlint": "^0.9.1",
     "grunt-contrib-concat": "^1.0.1",
