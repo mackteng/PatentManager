@@ -1,4 +1,4 @@
 cd public/
 npm install
 bower install
-grunt install
+./node_modules/grunt-cli/bin/grunt install
