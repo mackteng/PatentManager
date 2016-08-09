@@ -11,7 +11,7 @@ var gracefulShutdown = function(msg, callback){
 	});
 };
 
-var dbURI = 'mongodb://localhost/patent';
+var dbURI = process.env.MONGODB_URI;
 
 mongoose.connect(dbURI);
 
