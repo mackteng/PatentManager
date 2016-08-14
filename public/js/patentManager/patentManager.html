@@ -42,18 +42,30 @@
       </div>
     </div>
     <div class="form-group row">
-      <label class="col-sm-1">Active</label>
+      <label class="col-sm-1">Status</label>
       <div class="col-sm-5">
         <div class="radio">
           <label>
-            <input type="radio" ng-model="vm.search.active" name="gridRadios" id="gridRadios1" value="true" checked>
-            Yes
+            <input type="radio" ng-model="vm.search.status" value="" checked>
+            All
           </label>
         </div>
         <div class="radio">
           <label>
-            <input type="radio" ng-model="vm.search.active" name="gridRadios" id="gridRadios2" value="false">
-            No
+            <input type="radio" ng-model="vm.search.status" value="Active">
+            Active
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" ng-model="vm.search.status" value="Abandoned">
+            Abandoned
+          </label>
+        </div>
+        <div class="radio">
+          <label>
+            <input type="radio" ng-model="vm.search.status" value="Allowed">
+            Allowed
           </label>
         </div>
       </div>
@@ -79,20 +91,22 @@
             <thead>
             <tr>
               <th class="col-xs-1">Docket #</th>
+              <th class="col-xs-1">Client Docket #</th>
               <th class="col-xs-1">App. Type </th>
-              <th class="col-xs-3" ng-click="vm.changeOrder('englishTitle')">English Title</th>
-              <th class="col-xs-4" ng-click="vm.changeOrder('chineseTitle')">Chinese Title</th>
-              <th class="col-xs-2">Deadline</th>
+              <th class="col-xs-2" ng-click="vm.changeOrder('englishTitle')">English Title</th>
+              <th class="col-xs-2" ng-click="vm.changeOrder('chineseTitle')">Chinese Title</th>
+              <th class="col-xs-1">Last Activity</th>
               <th class="col-xs-1">Status</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat='patent in vm.patents | filter:vm.search | orderBy: vm.orderProperty : vm.reverse'>
               <td><a ng-href="#/manage/{{patent._id}}">{{patent.clientId}}.{{patent.docketNumber}}.{{patent.country | uppercase}}</a></td>
+              <td>{{patent.clientDocketNumber}}</td>
               <td>{{patent.applicationType}}</td>
               <td>{{patent.englishTitle}}</td>
               <td>{{patent.chineseTitle}}</td>
-              <td>{{patent.lastDeadline.eventName}}</td>
+              <td>{{patent.comments[0]}}</td>
               <td>{{patent.status}}</td>
             </tr>
           </tbody>

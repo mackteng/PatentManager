@@ -65,9 +65,6 @@ var patentSchema = new mongoose.Schema({
 	chineseTitle: String,
 	priority: [Priority],
 	inventors: [Inventor],
-  lastDeadline : {
-    type: Event
-  },
 	status : {
 		type: String,
     enum: ['Active', 'Abandoned', 'Allowed'],

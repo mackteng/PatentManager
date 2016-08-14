@@ -133,7 +133,6 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
   vm.multiSettingsDate = {displayProp: 'label', idProp: 'date'};
 
   vm.addEvent = function(){
-    console.log(vm.newEvent);
     if(!vm.newEvent.eventName){
       alert('Must provide name of event');
       return;
@@ -143,7 +142,7 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
       alert('Must specify deadline');
       return;
     }
-
+    vm.newComment = vm.newEvent.eventName;
     vm.newEvent.eventName = vm.patent.clientId + '.' + vm.patent.docketNumber + '.' +vm.patent.country.toUpperCase() + ' ' + vm.newEvent.eventName;
     for(var i = 0; i < vm.newEvent.notificationEmails.length; i++){
       vm.newEvent.notificationEmails[i] = vm.newEvent.notificationEmails[i].id;
@@ -155,12 +154,13 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
       .addEvent(vm.patent._id, vm.newEvent)
       .success(function(){
         vm.eventHistory.unshift(vm.newEvent);
-        vm.lastDeadline = vm.newEvent;
+        vm.addComment();
         vm.newEvent = {
           notificationEmails:[],
           notificationDates:[]
         };
-        patentService.markUpdated();
+
+        //patentService.markUpdated();
       })
       .error(function(){
         alert('Error adding event');
@@ -168,7 +168,7 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
   };
 
   vm.addComment = function(){
-    vm.patent.comments.push(vm.newComment);
+    vm.patent.comments.unshift(vm.newComment);
     vm.newComment = "";
     vm.save();
   }
