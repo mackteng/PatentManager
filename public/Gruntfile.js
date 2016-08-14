@@ -7,7 +7,7 @@ module.exports = function (grunt) {
     watch: {
       // If any .less file changes in directory "build/less/" run the "less"-task.
       files: ["build/less/*.less", "build/less/skins/*.less", "dist/js/app.js", "js/**/*.js"],
-      tasks: ["less", "concat" , "uglify"]
+      tasks: ["concat" , "uglify"]
     },
     // "less"-task configuration
     // This task will compile all less files upon saving to create both AdminLTE.css and AdminLTE.min.css
@@ -186,5 +186,5 @@ module.exports = function (grunt) {
   grunt.registerTask('install', ['less', 'concat', 'uglify']);
 
   // The default task (running "grunt" in console) is "watch"
-  grunt.registerTask('default', ['less', 'concat', 'uglify', 'watch']);
+  grunt.registerTask('default', ['concat', 'uglify', 'watch']);
 };

@@ -99,10 +99,17 @@ angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calend
         }
       });
     };
+    clientService.addNewClient = function(client){
+      return $http.post(baseUrl + 'clients/', client,{
+        headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+        }
+      });
+    }
     return clientService;
   }
 ;angular.module('patentApp').constant('config', {
-    baseUrl : 'http://192.168.19.157/api/'
+    baseUrl : 'api/'
 });
 ;angular
   .module('patentApp')
@@ -141,11 +148,11 @@ function eventService($http, config, authentication){
 }
 ;angular
   .module('patentApp')
-  .controller('overviewController', overviewController);
+  .controller('calendarController', calendarController);
 
-overviewController.$inject=['allEvents'];
+calendarController.$inject=['allEvents'];
 
-function overviewController(allEvents){
+function calendarController(allEvents){
   var vm = this;
   vm.events = allEvents.data;
   vm.eventSources = {events:[]}
@@ -167,12 +174,84 @@ function overviewController(allEvents){
         {
             title : vm.events[i].eventName,
             start : new Date(vm.events[i].eventDeadline),
-            url   : 'starter.html#/manage/' + vm.events[i].patentID
+            url   : '#/manage/' + vm.events[i].patentID
         }
       );
     }
   }
 }
+;angular.module('patentApp').controller('newClientFormController', newClientFormController);
+newClientFormController.$inject=['$uibModalInstance', 'clientService'];
+function newClientFormController($uibModalInstance, clientService){
+  var vm = this;
+  vm.client={};
+  // message alert
+  vm.message = {
+    type: 'success',
+    content: null
+  }
+  vm.closeMessage = function(){
+    vm.message.content = null;
+  }
+  vm.setMessage = function(type,message){
+    vm.message.type = type;
+    vm.message.content = message;
+  }
+
+
+  // Contacts
+  vm.client.contacts = [];
+  vm.addContact = function(){
+    vm.client.contacts.push({});
+  };
+  vm.deleteContact = function($index){
+    vm.client.contacts.splice($index, 1);
+  };
+
+  // Submit patent application
+  vm.submit = function(){
+    console.log(vm.client);
+    clientService
+      .addNewClient(vm.client)
+      .success(function(data){
+        $uibModalInstance.close(data);
+      })
+      .error(function(err){
+        vm.setMessage('danger', 'ERROR  : ' + err.message);
+      });
+  };
+
+  // cancel
+  vm.cancel = function(){
+    $uibModalInstance.dismiss('cancel');
+  };
+}
+;angular
+  .module('patentApp')
+  .controller('patentClientController', patentClientController);
+
+  patentClientController.$inject=['allClients', '$uibModal'];
+
+  function patentClientController(allClients, $uibModal){
+    var vm = this;
+    vm.clients = allClients.data;
+
+    // new patent form variable and functions
+    vm.newClientForm = function(){
+      var modalInstance = $uibModal.open({
+        templateUrl: 'js/patentClient/newClientForm.html',
+        size: 'med',
+        backdrop : 'static',
+        controller: 'newClientFormController',
+        controllerAs: 'vm',
+        resolve:{
+            allClients : function(){
+              return vm.clients
+            }
+        }
+      });
+    }
+  }
 ;angular.module('patentApp').controller('newPatentFormController', newPatentFormController);
 newPatentFormController.$inject=['$uibModalInstance', 'allClients', 'patentService'];
 function newPatentFormController($uibModalInstance,  allClients, patentService){
@@ -199,22 +278,41 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
 
   // date picker
   vm.picker1 = false;
-  vm.picker2 = false;
   vm.dateOptions = {};
   vm.openDatePicker1 = function(){
     vm.picker1 = true;
   }
-  vm.openDatePicker2 = function(){
-    vm.picker2 = true;
-  }
+
 
   // application Types
-  vm.applicationTypes = ['Patent'];
+  vm.applicationTypes = ['REG', 'DIV', 'CA', 'CIP', 'PRO'];
 
   // enable Priority Form
-  vm.enablePriorityForm = false;
-  vm.clearPriority = function(){
-    delete vm.patent.priority;
+  vm.picker = {};
+  vm.patent.priority = [];
+  vm.addPriority = function(){
+    vm.patent.priority.push({});
+  }
+  vm.openDatePicker = function($index){
+    vm.picker[$index] = true;
+  }
+  vm.deletePriority = function($index){
+    vm.patent.priority.splice($index, 1);
+  };
+
+
+  // status
+  vm.patent.status = 'Active';
+  vm.statusIs = function(status){
+    return (status === vm.patent.status);
+  }
+
+  vm.changeStatus = function(status){
+    vm.patent.status = status;
+    if(!vm.statusIs('Allowed')){
+      vm.patent.issueNumber='';
+      vm.patent.patentExpirationDate='';
+    }
   }
 
   // Inventors
@@ -227,10 +325,12 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
   };
 
   // List of countries
-  vm.listCountries = ['US', 'TW', 'CN', 'JP', 'KR', 'EU'];
+  vm.listCountries = ['US', 'TW', 'CN', 'JP', 'KR', 'EP'];
 
   // Submit patent application
   vm.submit = function(){
+    console.log(vm.patent);
+    vm.patent.patentType = 'Patent';
     patentService
       .addNewPatent(vm.patent)
       .success(function(data){
@@ -265,44 +365,52 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
     }
   }
 
+
   // format date
   vm.patent.filingDate = new Date(vm.patent.filingDate);
-  if(vm.patent.priority){
-    vm.patent.priority.priorityDate = new Date(vm.patent.priority.priorityDate);
+  vm.patent.publicationDate = new Date(vm.patent.publicationDate);
+  vm.patent.patentExpirationDate = new Date(vm.patent.patentExpirationDate);
+  for(i = 0; i < vm.patent.priority.length; i++){
+    vm.patent.priority[i].priorityDate = new Date(vm.patent.priority[i].priorityDate);
   }
-
   for(i = 0; i < vm.eventHistory.length; i++){
     vm.eventHistory[i].eventDeadline = new Date(vm.eventHistory[i].eventDeadline);
   }
 
 
-  vm.enablePriorityForm = vm.patent.priority!=null;
   //list of countries
-  vm.listCountries = ['US', 'TW', 'CN', 'JP', 'KR', 'EU'];
+  vm.listCountries = ['US', 'TW', 'CN', 'JP', 'KR', 'EP'];
   // application Types
-  vm.applicationTypes = ['Patent'];
-  // date picker
-  vm.picker1 = false;
-  vm.picker2 = false;
-  vm.picker3 = false;
+  vm.applicationTypes = ['REG', 'DIV', 'CA', 'CIP', 'PRO'];
+  // date pickers
   vm.dateOptions = {};
-  vm.openDatePicker1 = function(){
-    vm.picker1 = true;
+
+  vm.openDatePicker = function(item){
+    vm.picker={};
+    vm.picker[item] = true;
   }
-  vm.openDatePicker2 = function(){
-    vm.picker2 = true;
-  }
-  vm.openDatePicker3 = function(){
-    vm.picker3 = true;
-  }
+
   // Inventors
   vm.addInventor = function(){
     if(vm.editEnabled) vm.patent.inventors.push({});
   };
   vm.deleteInventor = function($index){
-    vm.patent.inventors.splice($index, 1);
+    if(vm.editEnabled)vm.patent.inventors.splice($index, 1);
   };
 
+
+
+  // Priority Form
+  vm.priorityDatePicker={};
+  vm.addPriority = function(){
+    if(vm.editEnabled)vm.patent.priority.push({});
+  }
+  vm.openPriorityDatePicker = function($index){
+    vm.priorityDatePicker[$index] = true;
+  }
+  vm.deletePriority = function($index){
+    if(vm.editEnabled)vm.patent.priority.splice($index, 1);
+  };
 
   // Timeline options
   vm.status = {
@@ -373,7 +481,6 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
   vm.multiSettingsDate = {displayProp: 'label', idProp: 'date'};
 
   vm.addEvent = function(){
-    console.log(vm.newEvent);
     if(!vm.newEvent.eventName){
       alert('Must provide name of event');
       return;
@@ -383,7 +490,7 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
       alert('Must specify deadline');
       return;
     }
-
+    vm.newComment = vm.newEvent.eventName;
     vm.newEvent.eventName = vm.patent.clientId + '.' + vm.patent.docketNumber + '.' +vm.patent.country.toUpperCase() + ' ' + vm.newEvent.eventName;
     for(var i = 0; i < vm.newEvent.notificationEmails.length; i++){
       vm.newEvent.notificationEmails[i] = vm.newEvent.notificationEmails[i].id;
@@ -395,12 +502,13 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
       .addEvent(vm.patent._id, vm.newEvent)
       .success(function(){
         vm.eventHistory.unshift(vm.newEvent);
-        vm.lastDeadline = vm.newEvent;
+        vm.addComment();
         vm.newEvent = {
           notificationEmails:[],
           notificationDates:[]
         };
-        patentService.markUpdated();
+
+        //patentService.markUpdated();
       })
       .error(function(){
         alert('Error adding event');
@@ -408,17 +516,21 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
   };
 
   vm.addComment = function(){
-    vm.patent.comments.push(vm.newComment);
+    vm.patent.comments.unshift(vm.newComment);
     vm.newComment = "";
     vm.save();
   }
 
-  vm.displayStatus = function(status){
-    return !(status === vm.patent.status);
+  vm.statusIs = function(status){
+    return (status === vm.patent.status);
   }
 
   vm.changeStatus = function(status){
     if(vm.editEnabled) vm.patent.status = status;
+    if(!vm.statusIs('Allowed')){
+      delete vm.patent.issueNumber;
+      delete vm.patent.patentExpirationDate;
+    }
   }
 
   $scope.$watch('vm.newEvent.eventDeadline', function(current, original){
@@ -561,11 +673,12 @@ function patentService($http, config, authentication){
 
 function routeConfig($stateProvider, $urlRouterProvider){
 
+  $urlRouterProvider.otherwise('manage');
     $stateProvider
       .state('overview',{
         url:'/overview',
-        templateUrl: 'js/overview/overview.html',
-        controller: 'overviewController',
+        templateUrl: 'js/patentCalendar/calendar.html',
+        controller: 'calendarController',
         controllerAs: 'vm',
         resolve:{
           allEvents  : allEvents
@@ -590,6 +703,15 @@ function routeConfig($stateProvider, $urlRouterProvider){
           eventHistory : getEventHistory,
           patent : allPatentsChild
         }
+      })
+      .state('clients',{
+          url:'/clients',
+          templateUrl: 'js/patentClient/patentClient.html',
+          controller: 'patentClientController',
+          controllerAs: 'vm',
+          resolve:{
+            allClients : allClients
+          }
       })
       .state('login', {
           url: '/login',
