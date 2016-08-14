@@ -21,29 +21,38 @@ var patentSchema = new mongoose.Schema({
 
 	// clientID holds the reference to the client this patent application belongs to
 	// Use custom validator to mimic foreign key constraint
+
+  //Client ID eg: 6101
 	clientId :	{
 		type: String,
-		ref: 'Client' ,
+		ref: 'Client',
 		required : true,
 		validate: clientExistsValidator
 	},
+  // Docket Number for Client, eg: 012
 	docketNumber: {
 		type: Number,
 		required: true
 	},
+  // Client's Docket Number, eg: RD1002
   clientDocketNumber:{
     type: String,
   },
 	country: {
 		type: String,
 		required: true,
-    enum: ['US', 'TW', 'CN', 'JP', 'KR', 'EU']
+    enum: ['US', 'TW', 'CN', 'JP', 'KR', 'EP']
 	},
-	applicationType: {
+	patentType: {
 		type: String,
 		required: true,
-    enum:['Patent']
+    enum:['Patent','Utility']
 	},
+  applicationType:{
+    type: String,
+    required: true,
+    enum:['REG', 'DIV', 'CA', 'CIP', 'PRO']
+  },
 	filingDate: {
 		type: Date,
 		required: true
@@ -52,12 +61,9 @@ var patentSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	englishTitle: {
-		type: String,
-	},
+	englishTitle: String,
 	chineseTitle: String,
-  issueNumber: String,
-	priority: Priority,
+	priority: [Priority],
 	inventors: [Inventor],
   lastDeadline : {
     type: Event
@@ -68,6 +74,7 @@ var patentSchema = new mongoose.Schema({
 		required: true
 	},
   publicationDate: Date,
+  issueNumber: String,
   patentExpirationDate: Date,
   comments:{
     type: [String]
@@ -76,11 +83,5 @@ var patentSchema = new mongoose.Schema({
 
 
 // set compound index for clientID and clientDocketNumber
-patentSchema.index({"clientID" : 1, "docketNumber" : 1, "country" : 1}, {unique: true});
-
-// set virtual getter for full docket
-patentSchema.virtual('FullDocketNumber').get(function(){
-	return this.clientId + '.' + this.docketNumber + this.country;
-});
-
+patentSchema.index({"clientID" : 1, "docketNumber" : 1, "country" : 1, "applicationType" : 1}, {unique: true});
 mongoose.model('Patent', patentSchema);

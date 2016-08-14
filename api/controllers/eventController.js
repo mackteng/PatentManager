@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var Patent = mongoose.model('Patent');
 var Event = mongoose.model('Event');
+var notification = require('../../services/notification/notification.js');
 
 var sendJsonResponse = function(res, payload, status){
 	res.status(status);
@@ -55,6 +56,7 @@ module.exports.addEvent = function(req, res){
 
 	newEvent.save(function(err, event){
 		if(err) return sendJsonResponse(res,err,400);
+		notification.addEvent(event);
 		sendJsonResponse(res, event, 200);
 	});
 };

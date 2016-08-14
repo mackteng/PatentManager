@@ -46,6 +46,36 @@
           </div>
         </div>
         <!-- Patent Information End -->
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Client Docket Number</label>
+          <div class="col-sm-4">
+            <input class="form-control" placeholder="Client Docket Number" ng-model="vm.patent.clientDocketNumber" >
+          </div>
+          <label class="col-sm-2 control-label">Publication Date</label>
+          <div class="col-sm-4">
+            <p class="input-group">
+              <input type="text" class="form-control" uib-datepicker-popup ng-model="vm.patent.publicationDate" is-open="vm.picker['publicationDate']" datepicker-options="vm.dateOptions" close-text="Close"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.openDatePicker('publicationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+          </div>
+        </div>
+        <div class="form-group" ng-show="vm.statusIs('Allowed')">
+          <label class="col-sm-2 control-label">Issue Number</label>
+          <div class="col-sm-4">
+            <input class="form-control" placeholder="Issue Number" ng-model="vm.patent.issueNumber">
+          </div>
+          <label class="col-sm-2 control-label">Patent Term</label>
+          <div class="col-sm-4">
+            <p class="input-group">
+              <input type="text" class="form-control" uib-datepicker-popup ng-model="vm.patent.patentExpirationDate" is-open="vm.picker['patentExpirationDate']" datepicker-options="vm.dateOptions" close-text="Close"/>
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="vm.openDatePicker('patentExpirationDate')"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
+          </div>
+        </div>
         <!-- English & Chinese Titles -->
         <div class="form-group">
           <label class="col-sm-2 control-label">English Title</label>
@@ -63,32 +93,37 @@
         <hr>
         <!-- Priority Form -->
         <div class="form-group">
-          <label class="col-sm-2 control-label">Priority</label>
-          <div class="col-sm-1">
-            <input type="checkbox" ng-model="vm.enablePriorityForm" ng-change="vm.clearPriority()">
-          </div>
+          <label class="col-sm-2 control-label">Priorities</label>
+          <a class="btn btn-xs btn-warning col-sm-offset-1 col-sm-8" ng-click="vm.addPriority()">Add Priority</a>
         </div>
-        <div class="form-group" ng-show="vm.enablePriorityForm">
-          <label class="col-sm-offset-2 col-sm-2 control-label" >Country</label>
-          <div class="col-sm-3">
-            <select class="form-control" ng-disabled="!vm.enablePriorityForm" ng-model="vm.patent.priority.priorityCountry">
-              <option ng-repeat="country in vm.listCountries" value="{{country}}"> {{country}} </option>
-            </select>
+        <div ng-repeat="pri in vm.patent.priority">
+          <div class="form-group">
+            <label class="col-sm-offset-2 col-sm-2 control-label" >Country</label>
+            <div class="col-sm-3">
+              <select class="form-control" ng-model="pri.priorityCountry">
+                <option ng-repeat="country in vm.listCountries" value="{{country}}"> {{country}} </option>
+              </select>
+            </div>
+            <label class="col-sm-2 control-label">Priority Date</label>
+            <div class="col-sm-3">
+              <p class="input-group">
+                <input type="text" class="form-control" uib-datepicker-popup ng-model="pri.priorityDate" is-open="vm.picker[$index]" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close"/>
+                <span class="input-group-btn">
+                  <button type="button" class="btn btn-default" ng-click="vm.openDatePicker($index)"><i class="glyphicon glyphicon-calendar"></i></button>
+                </span>
+              </p>
+            </div>
           </div>
-          <label class="col-sm-2 control-label">Priority Date</label>
-          <div class="col-sm-3">
-            <p class="input-group">
-              <input type="text" class="form-control" uib-datepicker-popup ng-model="vm.patent.priority.priorityDate" is-open="vm.picker2" datepicker-options="vm.dateOptions" ng-required="true" close-text="Close" ng-disabled="!vm.enablePriorityForm"/>
-              <span class="input-group-btn">
-                <button type="button" class="btn btn-default" ng-click="vm.openDatePicker2()"><i class="glyphicon glyphicon-calendar"></i></button>
-              </span>
-            </p>
-          </div>
-        </div>
-        <div class="form-group" ng-show="vm.enablePriorityForm">
-          <label class="col-sm-offset-2 col-sm-2 control-label">App. Number</label>
-          <div class="col-sm-3">
-            <input class="form-control" placeholder="Filing Number" ng-disabled="!vm.enablePriorityForm" ng-model="vm.patent.priority.priorityFilingNumber">
+          <div class="form-group">
+            <label class="col-sm-offset-2 col-sm-2 control-label">App. Number</label>
+            <div class="col-sm-3">
+              <input class="form-control" placeholder="Filing Number" ng-model="pri.priorityFilingNumber">
+            </div>
+            <div class="col-sm-1">
+              <a style="display:inline" ng-click="vm.deletePriority($index)">
+                <span class="glyphicon glyphicon-remove control-label"></span>
+              </a>
+            </div>
           </div>
         </div>
         <!-- Priority Form End -->
@@ -125,10 +160,10 @@
         <!-- Inventors Information End -->
         <!-- Active -->
         <div class="form-group">
-          <label class="col-sm-2 control-label">Active</label>
-          <div class="col-lg-9">
-            <input type="checkbox" name="MyCheckBox" ng-model="vm.patent.active">
-          </div>
+          <label class="col-sm-2 control-label">Status</label>
+          <a class="btn btn-sm btn-primary col-sm-offset-1 col-sm-2" ng-disabled="!vm.statusIs('Active')" ng-click="vm.changeStatus('Active')">Active</a>
+          <a class="btn btn-sm btn-danger col-sm-offset-1 col-sm-2" ng-disabled="!vm.statusIs('Abandoned')" ng-click="vm.changeStatus('Abandoned')">Abandoned</a>
+          <a class="btn btn-sm btn-success col-sm-offset-1 col-sm-2" ng-disabled="!vm.statusIs('Allowed')" ng-click="vm.changeStatus('Allowed')">Allowed</a>
         </div>
         <!-- Active End -->
         <hr>

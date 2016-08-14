@@ -17,44 +17,52 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
     }
   }
 
+
   // format date
   vm.patent.filingDate = new Date(vm.patent.filingDate);
-  if(vm.patent.priority){
-    vm.patent.priority.priorityDate = new Date(vm.patent.priority.priorityDate);
+  vm.patent.publicationDate = new Date(vm.patent.publicationDate);
+  vm.patent.patentExpirationDate = new Date(vm.patent.patentExpirationDate);
+  for(i = 0; i < vm.patent.priority.length; i++){
+    vm.patent.priority[i].priorityDate = new Date(vm.patent.priority[i].priorityDate);
   }
-
   for(i = 0; i < vm.eventHistory.length; i++){
     vm.eventHistory[i].eventDeadline = new Date(vm.eventHistory[i].eventDeadline);
   }
 
 
-  vm.enablePriorityForm = vm.patent.priority!=null;
   //list of countries
-  vm.listCountries = ['US', 'TW', 'CN', 'JP', 'KR', 'EU'];
+  vm.listCountries = ['US', 'TW', 'CN', 'JP', 'KR', 'EP'];
   // application Types
-  vm.applicationTypes = ['Patent'];
-  // date picker
-  vm.picker1 = false;
-  vm.picker2 = false;
-  vm.picker3 = false;
+  vm.applicationTypes = ['REG', 'DIV', 'CA', 'CIP', 'PRO'];
+  // date pickers
   vm.dateOptions = {};
-  vm.openDatePicker1 = function(){
-    vm.picker1 = true;
+
+  vm.openDatePicker = function(item){
+    vm.picker={};
+    vm.picker[item] = true;
   }
-  vm.openDatePicker2 = function(){
-    vm.picker2 = true;
-  }
-  vm.openDatePicker3 = function(){
-    vm.picker3 = true;
-  }
+
   // Inventors
   vm.addInventor = function(){
     if(vm.editEnabled) vm.patent.inventors.push({});
   };
   vm.deleteInventor = function($index){
-    vm.patent.inventors.splice($index, 1);
+    if(vm.editEnabled)vm.patent.inventors.splice($index, 1);
   };
 
+
+
+  // Priority Form
+  vm.priorityDatePicker={};
+  vm.addPriority = function(){
+    if(vm.editEnabled)vm.patent.priority.push({});
+  }
+  vm.openPriorityDatePicker = function($index){
+    vm.priorityDatePicker[$index] = true;
+  }
+  vm.deletePriority = function($index){
+    if(vm.editEnabled)vm.patent.priority.splice($index, 1);
+  };
 
   // Timeline options
   vm.status = {
@@ -165,12 +173,16 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
     vm.save();
   }
 
-  vm.displayStatus = function(status){
-    return !(status === vm.patent.status);
+  vm.statusIs = function(status){
+    return (status === vm.patent.status);
   }
 
   vm.changeStatus = function(status){
     if(vm.editEnabled) vm.patent.status = status;
+    if(!vm.statusIs('Allowed')){
+      delete vm.patent.issueNumber;
+      delete vm.patent.patentExpirationDate;
+    }
   }
 
   $scope.$watch('vm.newEvent.eventDeadline', function(current, original){

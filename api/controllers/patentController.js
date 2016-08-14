@@ -46,23 +46,21 @@ module.exports.createPatent = function(req, res){
 		docketNumber: req.body.docketNumber,
 		clientDocketNumber: req.body.clientDocketNumber,
 		country: req.body.country,
+		patentType: req.body.patentType,
 		applicationType: req.body.applicationType,
 		filingDate: req.body.filingDate,
 		filingNumber: req.body.filingNumber,
 		englishTitle: req.body.englishTitle,
 		chineseTitle: req.body.chineseTitle,
 		inventors: req.body.inventors,
-		status: 'Active',
+		priority: req.body.priority,
+		status: req.body.status,
+		publicationDate: req.body.publicationDate,
+		issueNumber : req.body.issueNumber,
+		patentExpirationDate: req.body.patentExpirationDate,
 		comments:[]
 	};
 
-	if(req.body.priority){
-		patent.priority = {
-			priorityCountry: req.body.priority.priorityCountry,
-			priorityFilingNumber: req.body.priority.priorityFilingNumber,
-			priorityDate: req.body.priority.priorityDate
-		};
-	}
 	Patent.create(patent, function(err, patent){
 		if(err){
 			console.log(err);
@@ -102,6 +100,7 @@ module.exports.updatePatent = function(req, res){
 
 			patent.save(function(err){
 				if(err){
+					console.log(err);
 					return sendJsonResponse(res, err, 400);
 				}
 				sendJsonResponse(res, patent, 200);

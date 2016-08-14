@@ -24,22 +24,41 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
 
   // date picker
   vm.picker1 = false;
-  vm.picker2 = false;
   vm.dateOptions = {};
   vm.openDatePicker1 = function(){
     vm.picker1 = true;
   }
-  vm.openDatePicker2 = function(){
-    vm.picker2 = true;
-  }
+
 
   // application Types
-  vm.applicationTypes = ['Patent'];
+  vm.applicationTypes = ['REG', 'DIV', 'CA', 'CIP', 'PRO'];
 
   // enable Priority Form
-  vm.enablePriorityForm = false;
-  vm.clearPriority = function(){
-    delete vm.patent.priority;
+  vm.picker = {};
+  vm.patent.priority = [];
+  vm.addPriority = function(){
+    vm.patent.priority.push({});
+  }
+  vm.openDatePicker = function($index){
+    vm.picker[$index] = true;
+  }
+  vm.deletePriority = function($index){
+    vm.patent.priority.splice($index, 1);
+  };
+
+
+  // status
+  vm.patent.status = 'Active';
+  vm.statusIs = function(status){
+    return (status === vm.patent.status);
+  }
+
+  vm.changeStatus = function(status){
+    vm.patent.status = status;
+    if(!vm.statusIs('Allowed')){
+      vm.patent.issueNumber='';
+      vm.patent.patentExpirationDate='';
+    }
   }
 
   // Inventors
@@ -52,10 +71,12 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
   };
 
   // List of countries
-  vm.listCountries = ['US', 'TW', 'CN', 'JP', 'KR', 'EU'];
+  vm.listCountries = ['US', 'TW', 'CN', 'JP', 'KR', 'EP'];
 
   // Submit patent application
   vm.submit = function(){
+    console.log(vm.patent);
+    vm.patent.patentType = 'Patent';
     patentService
       .addNewPatent(vm.patent)
       .success(function(data){
