@@ -1,10 +1,10 @@
 angular
   .module('patentApp')
-  .controller('overviewController', overviewController);
+  .controller('calendarController', calendarController);
 
-overviewController.$inject=['allEvents'];
+calendarController.$inject=['allEvents'];
 
-function overviewController(allEvents){
+function calendarController(allEvents){
   var vm = this;
   vm.events = allEvents.data;
   vm.eventSources = {events:[]}
@@ -26,7 +26,7 @@ function overviewController(allEvents){
         {
             title : vm.events[i].eventName,
             start : new Date(vm.events[i].eventDeadline),
-            url   : 'starter.html#/manage/' + vm.events[i].patentID
+            url   : '#/manage/' + vm.events[i].patentID
         }
       );
     }
