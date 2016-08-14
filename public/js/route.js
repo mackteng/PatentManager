@@ -4,11 +4,12 @@ angular
 
 function routeConfig($stateProvider, $urlRouterProvider){
 
+  $urlRouterProvider.otherwise('manage');
     $stateProvider
       .state('overview',{
         url:'/overview',
-        templateUrl: 'js/overview/overview.html',
-        controller: 'overviewController',
+        templateUrl: 'js/patentCalendar/calendar.html',
+        controller: 'calendarController',
         controllerAs: 'vm',
         resolve:{
           allEvents  : allEvents
@@ -33,6 +34,15 @@ function routeConfig($stateProvider, $urlRouterProvider){
           eventHistory : getEventHistory,
           patent : allPatentsChild
         }
+      })
+      .state('clients',{
+          url:'/clients',
+          templateUrl: 'js/patentClient/patentClient.html',
+          controller: 'patentClientController',
+          controllerAs: 'vm',
+          resolve:{
+            allClients : allClients
+          }
       })
       .state('login', {
           url: '/login',

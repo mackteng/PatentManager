@@ -12,5 +12,12 @@ angular
         }
       });
     };
+    clientService.addNewClient = function(client){
+      return $http.post(baseUrl + 'clients/', client,{
+        headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+        }
+      });
+    }
     return clientService;
   }
