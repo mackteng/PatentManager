@@ -6,15 +6,22 @@ function patentController(allPatents, allClients, $uibModal){
   vm.patents = allPatents.data;
   vm.clients = allClients.data;
 
+  function pad(str){
+    while(str.length < 3) str = '0' + str;
+    return str;
+  }
+
   for(var i = 0; i < vm.patents.length; i++){
-    vm.patents[i].litronDocketNumber = vm.patents[i].clientId+'.'+vm.patents[i].docketNumber+'.'+vm.patents[i].country.toUpperCase();
+    vm.patents[i].litronDocketNumber = vm.patents[i].clientId+'.'+pad(vm.patents[i].docketNumber.toString())+'.'+vm.patents[i].country.toUpperCase();
   }
 
   vm.gridOptions = {
     enableFiltering: true,
     data: vm.patents,
+    enablePaginationControls: true,
     paginationPageSizes: [25, 50, 75],
     paginationPageSize: 25,
+    rowHeight:50,
     columnDefs:[
       {field: 'litronDocketNumber', displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
       {field: 'clientDocketNumber', displayName: 'Client Docket Number'},

@@ -33,7 +33,6 @@ table = ["clientId", "docketNumber", "clientDocketNumber", "chineseTitle", "coun
 #read in filename from command line
 script, filename = argv
 reader = unicode_csv_reader(filename);
-result = io.open('result.json', 'w', encoding='utf-8');
 
 for row in reader:
   base ={}
@@ -55,4 +54,4 @@ for row in reader:
   #result.write(json.dumps(base, ensure_ascii=False, indent=4))
   jsonData =  json.dumps(base, ensure_ascii=False, indent=4)
   print jsonData
-  requests.post('http://192.168.19.157/api/patents',data=base)
+  requests.post('http://192.168.19.158/api/patents',data=base)

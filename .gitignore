@@ -41,6 +41,8 @@ _site/
 *.bak
 *.swp
 .env
+*.json
+*.xlsx
 logs/
 
 # Sublime editor

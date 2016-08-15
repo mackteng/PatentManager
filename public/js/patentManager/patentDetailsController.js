@@ -16,11 +16,10 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
       break;
     }
   }
-
   // format date
   vm.patent.filingDate = new Date(vm.patent.filingDate);
-  vm.patent.publicationDate = new Date(vm.patent.publicationDate);
-  vm.patent.patentExpirationDate = new Date(vm.patent.patentExpirationDate);
+  if(vm.patent.publicationDate) vm.patent.publicationDate = new Date(vm.patent.publicationDate);
+  if(vm.patent.patentExpirationDate) vm.patent.patentExpirationDate = new Date(vm.patent.patentExpirationDate);
   for(i = 0; i < vm.patent.priority.length; i++){
     vm.patent.priority[i].priorityDate = new Date(vm.patent.priority[i].priorityDate);
   }

@@ -45,7 +45,7 @@ router.post('/login', authController.login);
 // define api routes for patent
 router.get('/patents', auth, userExists, patentController.listAllPatents);
 router.get('/patents/:patentid', auth, userExists, patentController.listOnePatent);
-router.post('/patents', auth, userExists,patentController.createPatent);
+router.post('/patents', patentController.createPatent);
 router.put('/patents/:patentid', auth, userExists,patentController.updatePatent);
 router.delete('/patents/:patentid', auth, userExists, isAdmin, patentController.deletePatent);
 

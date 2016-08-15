@@ -44,3 +44,9 @@ textarea {
 .panel-body{
   padding-bottom:0px;
 }
+
+.myGrid {
+    padding-top:10px;
+    width: 100%;
+    height: 75vh;
+  }

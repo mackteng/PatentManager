@@ -1,4 +1,4 @@
-angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar','angularjs-dropdown-multiselect', 'ui.grid']);
+angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar','angularjs-dropdown-multiselect', 'ui.grid','ui.grid.pagination','ui.grid.resizeColumns']);
 ;angular
   .module('patentApp')
   .factory('authentication', ['$window', 'config', '$http', authentication]);
@@ -436,11 +436,10 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
       break;
     }
   }
-
   // format date
   vm.patent.filingDate = new Date(vm.patent.filingDate);
-  vm.patent.publicationDate = new Date(vm.patent.publicationDate);
-  vm.patent.patentExpirationDate = new Date(vm.patent.patentExpirationDate);
+  if(vm.patent.publicationDate) vm.patent.publicationDate = new Date(vm.patent.publicationDate);
+  if(vm.patent.patentExpirationDate) vm.patent.patentExpirationDate = new Date(vm.patent.patentExpirationDate);
   for(i = 0; i < vm.patent.priority.length; i++){
     vm.patent.priority[i].priorityDate = new Date(vm.patent.priority[i].priorityDate);
   }
@@ -659,15 +658,22 @@ function patentController(allPatents, allClients, $uibModal){
   vm.patents = allPatents.data;
   vm.clients = allClients.data;
 
+  function pad(str){
+    while(str.length < 3) str = '0' + str;
+    return str;
+  }
+
   for(var i = 0; i < vm.patents.length; i++){
-    vm.patents[i].litronDocketNumber = vm.patents[i].clientId+'.'+vm.patents[i].docketNumber+'.'+vm.patents[i].country.toUpperCase();
+    vm.patents[i].litronDocketNumber = vm.patents[i].clientId+'.'+pad(vm.patents[i].docketNumber.toString())+'.'+vm.patents[i].country.toUpperCase();
   }
 
   vm.gridOptions = {
     enableFiltering: true,
     data: vm.patents,
+    enablePaginationControls: true,
     paginationPageSizes: [25, 50, 75],
     paginationPageSize: 25,
+    rowHeight:50,
     columnDefs:[
       {field: 'litronDocketNumber', displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
       {field: 'clientDocketNumber', displayName: 'Client Docket Number'},
