@@ -17,7 +17,6 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
     }
   }
 
-
   // format date
   vm.patent.filingDate = new Date(vm.patent.filingDate);
   vm.patent.publicationDate = new Date(vm.patent.publicationDate);
@@ -107,10 +106,31 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
       });
   }
 
+  // events
   vm.newEvent = {
     notificationEmails:[],
     notificationDates:[]
   };
+  vm.completeEvent = function($index){
+    eventService
+      .completeEvent(vm.eventHistory[$index]._id)
+      .success(function(){
+        vm.eventHistory[$index].completed = true;
+      })
+      .error(function(err){
+        console.log(err);
+      })
+  }
+  vm.deleteEvent = function($index){
+    eventService
+      .deleteEvent(vm.eventHistory[$index]._id)
+      .success(function(){
+        vm.eventHistory.splice($index,1);
+      })
+      .error(function(err){
+        console.log(err);
+      })
+  }
   vm.emailsList = [
     {
       id:1,

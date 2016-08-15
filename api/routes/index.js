@@ -54,6 +54,7 @@ router.get('/patents/:patentid/events', auth, userExists,eventController.getEven
 router.post('/patents/:patentid/events', auth, userExists,eventController.addEvent);
 
 router.get('/events', auth, userExists, eventController.listAllEvents);
+router.put('/events/:eventid', auth, userExists, eventController.completeEvent);
 router.delete('/events/:eventid', auth, userExists, eventController.deleteEvent);
 
 

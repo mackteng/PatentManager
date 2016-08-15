@@ -61,10 +61,30 @@ module.exports.addEvent = function(req, res){
 	});
 };
 
+module.exports.completeEvent = function(req, res){
+	if(!req.params || !req.params.eventid || !mongoose.Types.ObjectId.isValid(req.params.eventid)){
+		return sendJsonResponse(res, "No eventId Specified", 400);
+	}
+	Event
+		.findById(req.params.eventid)
+		.exec(function(err, event){
+			if(err){
+				return sendJsonResponse(res, err, 400);
+			}
+			event.completed = true;
+			event.save(function(err){
+				if(err){
+					return sendJsonResponse(res, err, 400);
+				}
+				return sendJsonResponse(res, "Success", 200);
+			});
+		});
+}
+
 // delete Event from Event History Container
 module.exports.deleteEvent = function(req, res){
   if(!req.params || !req.params.eventid || !mongoose.Types.ObjectId.isValid(req.params.eventid)){
-		return sendJsonResponse(res, "No PatentId Specified", 400);
+		return sendJsonResponse(res, "No eventId Specified", 400);
 	}
 
 	Event

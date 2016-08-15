@@ -31,5 +31,21 @@ function eventService($http, config, authentication){
       }
     });
   }
+
+  eventService.completeEvent = function(eventId){
+    return $http.put(baseUrl + '/events/' + eventId, {complete : true}, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  }
+
+  eventService.deleteEvent = function(eventId){
+    return $http.delete(baseUrl + '/events/' + eventId, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  }
   return eventService;
 }

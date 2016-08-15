@@ -6,8 +6,6 @@ function patentController(allPatents, allClients, $uibModal){
   vm.patents = allPatents.data;
   vm.clients = allClients.data;
 
-  console.log(vm.patents);
-
   for(var i = 0; i < vm.patents.length; i++){
     vm.patents[i].litronDocketNumber = vm.patents[i].clientId+'.'+vm.patents[i].docketNumber+'.'+vm.patents[i].country.toUpperCase();
   }

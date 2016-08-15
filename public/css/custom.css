@@ -40,3 +40,7 @@ textarea {
 .multiselect-parent, .btn-group, .dropdown-multiselect button{
   width:100%;
 }
+
+.panel-body{
+  padding-bottom:0px;
+}

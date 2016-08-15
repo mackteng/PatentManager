@@ -151,6 +151,22 @@ function eventService($http, config, authentication){
       }
     });
   }
+
+  eventService.completeEvent = function(eventId){
+    return $http.put(baseUrl + '/events/' + eventId, {complete : true}, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  }
+
+  eventService.deleteEvent = function(eventId){
+    return $http.delete(baseUrl + '/events/' + eventId, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  }
   return eventService;
 }
 ;angular
@@ -421,7 +437,6 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
     }
   }
 
-
   // format date
   vm.patent.filingDate = new Date(vm.patent.filingDate);
   vm.patent.publicationDate = new Date(vm.patent.publicationDate);
@@ -511,10 +526,31 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
       });
   }
 
+  // events
   vm.newEvent = {
     notificationEmails:[],
     notificationDates:[]
   };
+  vm.completeEvent = function($index){
+    eventService
+      .completeEvent(vm.eventHistory[$index]._id)
+      .success(function(){
+        vm.eventHistory[$index].completed = true;
+      })
+      .error(function(err){
+        console.log(err);
+      })
+  }
+  vm.deleteEvent = function($index){
+    eventService
+      .deleteEvent(vm.eventHistory[$index]._id)
+      .success(function(){
+        vm.eventHistory.splice($index,1);
+      })
+      .error(function(err){
+        console.log(err);
+      })
+  }
   vm.emailsList = [
     {
       id:1,
@@ -622,8 +658,6 @@ function patentController(allPatents, allClients, $uibModal){
   // patents
   vm.patents = allPatents.data;
   vm.clients = allClients.data;
-
-  console.log(vm.patents);
 
   for(var i = 0; i < vm.patents.length; i++){
     vm.patents[i].litronDocketNumber = vm.patents[i].clientId+'.'+vm.patents[i].docketNumber+'.'+vm.patents[i].country.toUpperCase();
