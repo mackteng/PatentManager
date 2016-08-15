@@ -53,6 +53,12 @@ function routeConfig($stateProvider, $urlRouterProvider){
             client : allClientsChild
           }
       })
+      .state('emailTemplates', {
+        url:'/emailTemplates',
+        templateUrl: 'js/patentEmailTemplate/patentEmailTemplate.html',
+        controller: 'patentEmailTemplateController',
+        controllerAs: 'vm'
+      })
       .state('login', {
           url: '/login',
           templateUrl: 'js/auth/login/login.html',
