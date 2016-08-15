@@ -19,7 +19,7 @@
             </thead>
             <tbody>
             <tr ng-repeat='client in vm.clients'>
-              <td>{{client.chineseName}}</td>
+              <td><a href="#/clients/{{client._id}}">{{client.chineseName}}</a></td>
               <td>{{client.englishName}}</td>
               <td>{{client.address}}</td>
               <td>{{client.telephone}}</td>

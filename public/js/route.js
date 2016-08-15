@@ -44,6 +44,15 @@ function routeConfig($stateProvider, $urlRouterProvider){
             allClients : allClients
           }
       })
+      .state('clients.details',{
+          url:'/:clientid',
+          templateUrl: 'js/patentClient/clientDetails.html',
+          controller: 'clientDetailsController',
+          controllerAs: 'vm',
+          resolve:{
+            client : allClientsChild
+          }
+      })
       .state('login', {
           url: '/login',
           templateUrl: 'js/auth/login/login.html',
@@ -84,6 +93,13 @@ function allPatentsChild(allPatents){
 allPatents.$inject=['patentService'];
 function allPatents(patentService){
   return patentService.listAllPatents();
+}
+
+allClientsChild.$inject = ['allClients'];
+function allClientsChild(allClients){
+  return{
+    allClients : allClients.data
+  }
 }
 
 allClients.$inject=['clientService'];

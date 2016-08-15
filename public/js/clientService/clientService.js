@@ -19,5 +19,12 @@ angular
         }
       });
     }
+    clientService.updateClient = function(client){
+      return $http.put(baseUrl + 'clients/'+client._id, client,{
+        headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+        }
+      });
+    }
     return clientService;
   }
