@@ -91,10 +91,10 @@ module.exports.updateClient = function(req, res){
 		.findById(req.params.clientid)
 		.exec(function(err, client){
 			if(err){
-				return sendJsonReponse(res, err, 400);
+				return sendJsonResponse(res, err, 400);
 			}
 			if(!client){
-				return sendJsonReponse(res, "No Such Client Found", 404);
+				return sendJsonResponse(res, "No Such Client Found", 404);
 			}
 
 			for(var field in Client.schema.paths){
@@ -106,7 +106,7 @@ module.exports.updateClient = function(req, res){
 			}
 			client.save(function(err){
 				if(err){
-					return sendJsonReponse(res, err, 400);
+					return sendJsonResponse(res, err, 400);
 				}
 
 				sendJsonResponse(res, client, 200);

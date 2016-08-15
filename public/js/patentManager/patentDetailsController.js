@@ -11,7 +11,7 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
   vm.eventHistory = eventHistory.data;
 
   for(var i = 0; i < vm.patents.length; i++){
-    if(vm.patents[i]._id == $stateParams.id){
+    if(vm.patents[i]._id === $stateParams.id){
       vm.patent = vm.patents[i];
       break;
     }

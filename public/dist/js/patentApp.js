@@ -1,4 +1,4 @@
-angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar','angularjs-dropdown-multiselect']);
+angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar','angularjs-dropdown-multiselect', 'ui.grid']);
 ;angular
   .module('patentApp')
   .factory('authentication', ['$window', 'config', '$http', authentication]);
@@ -106,6 +106,13 @@ angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calend
         }
       });
     }
+    clientService.updateClient = function(client){
+      return $http.put(baseUrl + 'clients/'+client._id, client,{
+        headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+        }
+      });
+    }
     return clientService;
   }
 ;angular.module('patentApp').constant('config', {
@@ -180,6 +187,54 @@ function calendarController(allEvents){
     }
   }
 }
+;angular
+  .module('patentApp')
+  .controller('clientDetailsController', clientDetailsController);
+
+  clientDetailsController.$inject=['$stateParams', 'client', 'clientService'];
+
+  function clientDetailsController($stateParams, client, clientService){
+    var vm = this;
+    vm.clients = client.allClients;
+    for(var i = 0; i < vm.clients.length; i++){
+      if(vm.clients[i]._id === $stateParams.clientid){
+        vm.client = vm.clients[i];
+        break;
+      }
+    }
+    // contacts
+    vm.addContact = function(){
+      if(vm.editEnabled)vm.client.contacts.push({});
+    }
+    vm.deleteContact = function($index){
+      if(vm.editEnabled)vm.client.contacts.splice($index, 1);
+    }
+    //edit
+    vm.editEnabled = false;
+    vm.oldClient = null;
+    vm.enableEdit = function(){
+      vm.oldClient = angular.copy(vm.client);
+      vm.editEnabled = true;
+    }
+
+    vm.cancelEdit = function(){
+      angular.copy(vm.oldPatent, vm.patent);
+      vm.editEnabled = false;
+    }
+
+    vm.save = function(){
+      clientService
+        .updateClient(vm.client, vm.client._id)
+        .success(function(){
+          angular.copy(vm.client, vm.oldClient);
+          vm.editEnabled = false;
+        })
+        .error(function(err){
+          alert(err);
+          vm.cancelEdit();
+        });
+    }
+  }
 ;angular.module('patentApp').controller('newClientFormController', newClientFormController);
 newClientFormController.$inject=['$uibModalInstance', 'clientService'];
 function newClientFormController($uibModalInstance, clientService){
@@ -331,6 +386,7 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
   vm.submit = function(){
     console.log(vm.patent);
     vm.patent.patentType = 'Patent';
+    vm.patent.litronDocketNumber = vm.patent.clientId+'.'+vm.patent.docketNumber+'.'+vm.patent.country.toUpperCase();
     patentService
       .addNewPatent(vm.patent)
       .success(function(data){
@@ -359,7 +415,7 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
   vm.eventHistory = eventHistory.data;
 
   for(var i = 0; i < vm.patents.length; i++){
-    if(vm.patents[i]._id == $stateParams.id){
+    if(vm.patents[i]._id === $stateParams.id){
       vm.patent = vm.patents[i];
       break;
     }
@@ -569,6 +625,28 @@ function patentController(allPatents, allClients, $uibModal){
 
   console.log(vm.patents);
 
+  for(var i = 0; i < vm.patents.length; i++){
+    vm.patents[i].litronDocketNumber = vm.patents[i].clientId+'.'+vm.patents[i].docketNumber+'.'+vm.patents[i].country.toUpperCase();
+  }
+
+  vm.gridOptions = {
+    enableFiltering: true,
+    data: vm.patents,
+    paginationPageSizes: [25, 50, 75],
+    paginationPageSize: 25,
+    columnDefs:[
+      {field: 'litronDocketNumber', displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
+      {field: 'clientDocketNumber', displayName: 'Client Docket Number'},
+      {field: 'applicationType', displayName: 'Application Type'},
+      {field: 'filingDate', displayName: 'Filing Date', cellFilter: 'date'},
+      {field: 'englishTitle', displayName: 'English Title'},
+      {field: 'chineseTitle', displayName: 'Chinese Title'},
+      {field: 'comments[0]', displayName: 'LastActivity'},
+      {field: 'status', displayName: 'Status'}
+    ]
+  };
+
+
   // advanced search collapse variable and functions
   vm.advancedSearchCollapse = true;
   vm.toggleAdvancedSearch = function(){
@@ -713,6 +791,15 @@ function routeConfig($stateProvider, $urlRouterProvider){
             allClients : allClients
           }
       })
+      .state('clients.details',{
+          url:'/:clientid',
+          templateUrl: 'js/patentClient/clientDetails.html',
+          controller: 'clientDetailsController',
+          controllerAs: 'vm',
+          resolve:{
+            client : allClientsChild
+          }
+      })
       .state('login', {
           url: '/login',
           templateUrl: 'js/auth/login/login.html',
@@ -753,6 +840,13 @@ function allPatentsChild(allPatents){
 allPatents.$inject=['patentService'];
 function allPatents(patentService){
   return patentService.listAllPatents();
+}
+
+allClientsChild.$inject = ['allClients'];
+function allClientsChild(allClients){
+  return{
+    allClients : allClients.data
+  }
 }
 
 allClients.$inject=['clientService'];

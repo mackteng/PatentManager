@@ -37,7 +37,8 @@
     "angular-ui-router": "^0.2.15",
     "bootstrap-table": "^1.10.1",
     "angular-ui-calendar": "1.0.1",
-    "angularjs-dropdown-multiselect": "^1.5.2"
+    "angularjs-dropdown-multiselect": "^1.5.2",
+    "angular-ui-grid": "^3.2.1"
   },
   "resolutions": {
     "angular": "~1.5.7"

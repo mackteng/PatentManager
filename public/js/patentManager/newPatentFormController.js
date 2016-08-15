@@ -77,6 +77,7 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
   vm.submit = function(){
     console.log(vm.patent);
     vm.patent.patentType = 'Patent';
+    vm.patent.litronDocketNumber = vm.patent.clientId+'.'+vm.patent.docketNumber+'.'+vm.patent.country.toUpperCase();
     patentService
       .addNewPatent(vm.patent)
       .success(function(data){
