@@ -135,9 +135,13 @@
         </div>
           <!-- Inventors Form -->
         <div class="form-group" ng-repeat="inventor in vm.patent.inventors">
-          <label class="col-sm-offset-1 col-sm-1 control-label">Name</label>
+          <label class="col-sm-1 control-label">Name</label>
           <div class="col-sm-2">
             <input class="form-control" placeholder="Name" ng-model="inventor.inventorEnglishName">
+          </div>
+          <label class="col-sm-1 control-label">SSN</label>
+          <div class="col-sm-2" style="width:14%">
+            <input class="form-control" placeholder="ID" ng-model="inventor.inventorIdentification">
           </div>
           <label class="col-sm-1 control-label">Country</label>
           <div class="col-sm-2" style="width:14%">
@@ -146,7 +150,7 @@
             </select>
           </div>
           <label class="col-sm-1 control-label">Address</label>
-          <div class="col-sm-3" style="width:30%">
+          <div class="col-sm-2" style="width:14%">
             <input class="form-control" placeholder="Address" ng-model="inventor.inventorAddress">
           </div>
           <div class="col-sm-1" style="width:2%">

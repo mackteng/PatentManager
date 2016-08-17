@@ -4,5 +4,6 @@ module.exports = new mongoose.Schema({
 	inventorChineseName: String,
 	inventorEnglishName: String,
 	inventorCountry: String,
-	inventorAddress: String
+	inventorAddress: String,
+	inventorIdentification: String
 });
