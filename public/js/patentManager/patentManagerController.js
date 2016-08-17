@@ -22,10 +22,10 @@ function patentController(allPatents, allClients, $uibModal){
       {field: 'litronDocketNumber', displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
       {field: 'clientDocketNumber', displayName: 'Client Docket Number'},
       {field: 'applicationType', displayName: 'Application Type'},
+      {field: 'country', displayName: 'Country'},
       {field: 'filingDate', displayName: 'Filing Date', cellFilter: 'date'},
       {field: 'englishTitle', displayName: 'English Title'},
       {field: 'chineseTitle', displayName: 'Chinese Title'},
-      {field: 'comments[0]', displayName: 'LastActivity'},
       {field: 'status', displayName: 'Status'}
     ]
   };
