@@ -34,6 +34,9 @@ var patentSchema = new mongoose.Schema({
 		type: Number,
 		required: true
 	},
+  litronDocketNumber: {
+    type: String
+  },
   // Client's Docket Number, eg: RD1002
   clientDocketNumber:{
     type: String,
@@ -79,7 +82,7 @@ var patentSchema = new mongoose.Schema({
 });
 
 patentSchema.pre('save', function(next) {
-    this.litronDocketNumber = this.clientId+'.'+this.docketNumber+'.'+this.patent.country.toUpperCase();
+    this.litronDocketNumber = this.clientId+'.'+this.docketNumber+'.'+this.country.toUpperCase();
     next();
 });
 // set compound index for clientID and clientDocketNumber
