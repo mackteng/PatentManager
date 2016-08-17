@@ -61,11 +61,16 @@ module.exports.listOneClient = function(req, res){
 module.exports.createClient = function(req, res){
 	Client.create({
 			_id : req.body.clientNumber,
+			comment: req.body.comment,
 			englishName: req.body.englishName,
 			chineseName: req.body.chineseName,
-			address: req.body.address,
+			chineseAddress: req.body.chineseAddress,
+			englishAddress: req.body.englishAddress,
 			telephone: req.body.telephone,
-			contacts: req.body.contacts
+			contacts: req.body.contacts,
+			identificationNumber : req.body.identificationNumber,
+			repChineseName : req.body.repChineseName,
+			repEnglishName : req.body.repEnglishName
 	}, function(err, client){
 		if(err){
 			sendJsonResponse(res, err, 400);

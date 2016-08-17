@@ -14,9 +14,14 @@ var clientSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
-	address : String,
+	chineseAddress : String,
+	englishAddress : String,
+	identificationNumber : String,
+	repChineseName: String,
+	repEnglishName: String,
 	telephone : String,
-	contacts : [Contact]
+	contacts : [Contact],
+	comment : String
 });
 
 mongoose.model('Client', clientSchema);

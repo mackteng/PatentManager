@@ -26,17 +26,46 @@
 
             <!-- Contact Info -->
             <div class="form-group">
-              <label class="col-sm-2 control-label">Address</label>
+              <label class="col-sm-2 control-label">Chinese Address</label>
               <div class="col-sm-4">
-                <input class="form-control" placeholder="Address" ng-model="vm.client.address" ng-disabled="!vm.editEnabled">
+                <input class="form-control" placeholder="Address" ng-model="vm.client.chineseAddress" ng-disabled="!vm.editEnabled">
               </div>
+            </div class="form-group">
+            <div class="form-group">
+              <label class="col-sm-2 control-label">English Address</label>
+              <div class="col-sm-4">
+                <input class="form-control" placeholder="Telephone" ng-model="vm.client.englishAddress" ng-disabled="!vm.editEnabled">
+              </div>
+            </div>
+            <!-- Contact Info End -->
+
+            <div class="form-group">
               <label class="col-sm-2 control-label">Telephone</label>
               <div class="col-sm-4">
                 <input class="form-control" placeholder="Telephone" ng-model="vm.client.telephone" ng-disabled="!vm.editEnabled">
               </div>
+              <label class="col-sm-2 control-label">Identfication</label>
+              <div class="col-sm-4">
+                <input class="form-control" placeholder="Identification" ng-model="vm.client.identificationNumber" ng-disabled="!vm.editEnabled">
+              </div>
             </div>
-            <!-- Contact Info End -->
-          <hr>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Representative</label>
+              <label class="col-sm-2 control-label">Chinese Name</label>
+              <div class="col-sm-3">
+                <input class="form-control" placeholder="Name" ng-model="vm.client.repChineseName" ng-disabled="!vm.editEnabled">
+              </div>
+              <label class="col-sm-2 control-label">English Name</label>
+              <div class="col-sm-3">
+                <input class="form-control" placeholder="Telephone" ng-model="vm.client.repEnglishName" ng-disabled="!vm.editEnabled">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="col-sm-2 control-label">Comments</label>
+              <div class="col-xs-10">
+                <input class="form-control" ng-model="vm.client.comment" ng-disabled="!vm.editEnabled"/>
+              </div>
+            </div>
             <!-- Contacts Information -->
             <div class="form-group">
               <label class="col-sm-2 control-label">Contacts</label>
@@ -76,7 +105,7 @@
             <!-- Submit Button -->
             <div class="form-group">
               <div class="col-sm-offset-3 col-sm-6">
-                <button class="btn btn-success form-control btn-xs" ng-click="vm.save()" ng-show="vm.editEnabled"> Submit </button>
+                <button class="btn btn-success form-control btn-xs" ng-click="vm.save()" ng-show="vm.editEnabled"> Save </button>
               </div>
             </div>
             <!-- Submit Button End -->

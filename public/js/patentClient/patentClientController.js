@@ -22,5 +22,8 @@ angular
             }
         }
       });
+      modalInstance.result.then(function(client){
+        vm.clients.push(client);
+      });
     }
   }

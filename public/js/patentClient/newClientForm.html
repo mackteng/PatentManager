@@ -21,16 +21,38 @@
           </div>
         </div>
         <!-- English & Chinese Titles End -->
-
         <!-- Contact Info -->
         <div class="form-group">
-          <label class="col-sm-2 control-label">Address</label>
-          <div class="col-sm-4">
-            <input class="form-control" placeholder="Address" ng-model="vm.client.address">
+          <label class="col-sm-2 control-label">Chinese Address</label>
+          <div class="col-sm-10">
+            <input class="form-control" placeholder="Address" ng-model="vm.client.chineseAddress">
           </div>
+        </div class="form-group">
+        <div class="form-group">
+          <label class="col-sm-2 control-label">English Address</label>
+          <div class="col-sm-10">
+            <input class="form-control" placeholder="Address" ng-model="vm.client.englishAddress">
+          </div>
+        </div>
+        <div class="form-group">
           <label class="col-sm-2 control-label">Telephone</label>
           <div class="col-sm-4">
             <input class="form-control" placeholder="Telephone" ng-model="vm.client.telephone">
+          </div>
+          <label class="col-sm-2 control-label">Identfication</label>
+          <div class="col-sm-4">
+            <input class="form-control" placeholder="Telephone" ng-model="vm.client.identificationNumber">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="col-sm-2 control-label">Representative</label>
+          <label class="col-sm-2 control-label">Chinese Name</label>
+          <div class="col-sm-3">
+            <input class="form-control" placeholder="Name" ng-model="vm.client.repChineseName">
+          </div>
+          <label class="col-sm-2 control-label">English Name</label>
+          <div class="col-sm-3">
+            <input class="form-control" placeholder="Name" ng-model="vm.client.repEnglishName">
           </div>
         </div>
         <!-- Contact Info End -->

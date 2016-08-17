@@ -358,6 +358,9 @@ function newClientFormController($uibModalInstance, clientService){
             }
         }
       });
+      modalInstance.result.then(function(client){
+        vm.clients.push(client);
+      });
     }
   }
 ;angular
