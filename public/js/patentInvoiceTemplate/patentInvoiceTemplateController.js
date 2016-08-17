@@ -10,17 +10,24 @@ angular
       "status": "Active",
       "patentExpirationDate": "",
       "patentType": "Patent",
-      "filingDate": "2015-05-13T00:00:00",
+      "filingDate": new Date("2015-05-13T00:00:00"),
       "filingNumber": "104115268",
       "country": "TW",
       "issueNumber": "",
-      "clientId": "6101",
+      "englishTitle": "Choke",
       "chineseTitle": "電磁元件及其線圈結構",
-      "docketNumber": 105,
+      "docketNumber": "012",
       "clientDocketNumber": "RD-101007-TW-1-D1",
       "publicationDate": "",
-      "Comment": "",
-      "applicationType": "REG"
+      "applicationType": "REG",
+      "clientNumber": "6101",
+      "clientTelephone": "02-20455641",
+      "clientChineseName" : "乾坤科技",
+      "clientEnglishName" : "Cyntec Co. Ltd.",
+      "clientChineseAddress" : "新竹市新竹科學工業園區研發二路2號",
+      "clientEnglishAddress" : "No. 2, R&D 2nd Road, Baoshan Township, Hsinchu County, 30076",
+      "clientRepChineseName": "陳世偉",
+      "clientRepEnglishName": "Gary"
     };
 
     vm.uploadFile = function(file){

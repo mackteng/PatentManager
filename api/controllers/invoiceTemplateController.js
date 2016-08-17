@@ -32,12 +32,19 @@ module.exports.populateInvoiceTemplate = function(req,res){
 					return sendJsonResponse(res, err, 400);
 				}
 				date = new Date();
-				patent.clientID = patent.clientId._id;
+
+				patent.clientNumber = patent.clientId._id;
 				patent.clientChineseName = patent.clientId.chineseName;
 				patent.clientEnglishName = patent.clientId.englishName;
-				patent.clientAddress = patent.clientId.address;
+				patent.clientChineseAddress = patent.clientId.chineseAddress;
+				patent.clientEnglishAddress = patent.clientId.EnglishAddress;
 				patent.clientTelephone = patent.clientId.telephone;
-				patent.date = date.getDate()+'/'+(1+date.getMonth())+'/'+date.getFullYear();
+				patent.clientRepChineseName = patent.clientId.repChineseName;
+				patent.clientRepEnglishName = patent.clientId.repEnglishName;
+
+				patent.date = date.getDate();
+				patent.month = date.getMonth();
+				patent.fullDate = date.getDate()+'/'+(1+date.getMonth())+'/'+date.getFullYear();
 				try{
 					var doc = new Docxtemplater(content);
 					doc.setData(patent);
