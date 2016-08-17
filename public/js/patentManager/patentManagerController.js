@@ -11,10 +11,6 @@ function patentController(allPatents, allClients, $uibModal){
     return str;
   }
 
-  for(var i = 0; i < vm.patents.length; i++){
-    vm.patents[i].litronDocketNumber = vm.patents[i].clientId+'.'+pad(vm.patents[i].docketNumber.toString())+'.'+vm.patents[i].country.toUpperCase();
-  }
-
   vm.gridOptions = {
     enableFiltering: true,
     data: vm.patents,

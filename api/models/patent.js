@@ -78,7 +78,10 @@ var patentSchema = new mongoose.Schema({
   }
 });
 
-
+patentSchema.pre('save', function(next) {
+    this.litronDocketNumber = this.clientId+'.'+this.docketNumber+'.'+this.patent.country.toUpperCase();
+    next();
+});
 // set compound index for clientID and clientDocketNumber
 patentSchema.index({"clientID" : 1, "docketNumber" : 1, "country" : 1, "applicationType" : 1}, {unique: true});
 mongoose.model('Patent', patentSchema);
