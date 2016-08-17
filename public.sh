@@ -1,3 +1,4 @@
+mkdir uploads
 cd public/
 npm install
 bower install
