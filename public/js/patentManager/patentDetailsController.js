@@ -2,9 +2,9 @@ angular
   .module('patentApp')
   .controller('patentDetailsController', patentDetailsController);
 
-patentDetailsController.$inject = ['$scope','$stateParams', 'patent', 'eventHistory', 'eventService', 'patentService'];
+patentDetailsController.$inject = ['$scope','$stateParams', '$uibModal', 'patent', 'eventHistory', 'eventService', 'patentService', 'invoiceService'];
 
-function patentDetailsController($scope, $stateParams, patent, eventHistory, eventService, patentService){
+function patentDetailsController($scope, $stateParams, $uibModal, patent, eventHistory, eventService, patentService, invoiceService){
   var vm = this;
   vm.patents = patent.allPatents;
   vm.patent = null;
@@ -229,4 +229,24 @@ function patentDetailsController($scope, $stateParams, patent, eventHistory, eve
       });
     };
   });
+
+  vm.invoice = function(){
+    var modalInstance = $uibModal.open({
+      templateUrl: 'js/patentManager/invoiceMenu.html',
+      size: 'small',
+      backdrop : 'static',
+      controller: 'invoiceMenuController',
+      controllerAs: 'vm',
+      resolve:{
+          allInvoices : function(){
+            return invoiceService.listAllInvoices();
+          },
+          patentId: function(){
+            return vm.patent._id;
+          }
+      }
+    });
+  }
+
+
 }
