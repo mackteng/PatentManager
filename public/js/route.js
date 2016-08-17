@@ -59,6 +59,15 @@ function routeConfig($stateProvider, $urlRouterProvider){
         controller: 'patentEmailTemplateController',
         controllerAs: 'vm'
       })
+      .state('invoiceTemplates', {
+        url:'/invoiceTemplates',
+        templateUrl: 'js/patentInvoiceTemplate/patentInvoiceTemplate.html',
+        controller: 'patentInvoiceTemplateController',
+        controllerAs: 'vm',
+        resolve:{
+          invoices: allInvoices
+        }
+      })
       .state('login', {
           url: '/login',
           templateUrl: 'js/auth/login/login.html',
@@ -78,6 +87,11 @@ angular
           }
       });
   }]);
+
+allInvoices.$inject=['invoiceService'];
+function allInvoices(invoiceService){
+  return invoiceService.listAllInvoices();
+}
 
 allEvents.$inject=['eventService'];
 function allEvents(eventService){

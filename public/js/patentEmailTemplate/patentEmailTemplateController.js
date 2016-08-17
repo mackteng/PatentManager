@@ -2,7 +2,9 @@ angular
   .module('patentApp')
   .controller('patentEmailTemplateController', patentEmailTemplateController);
 
-  function patentEmailTemplateController(){
+  patentEmailTemplateController.$inject=['$sce']
+
+  function patentEmailTemplateController($sce){
     var vm = this;
     vm.testEvent = {
       "status": "Active",
@@ -20,8 +22,8 @@ angular
       "Comment": "",
       "applicationType": "REG"
     };
-
-
+    vm.gmailURL = $sce.trustAsResourceUrl("http://mail.google.com/mail/?compose=1&view=cm&fs=1");
+    vm.populatedBody = 'hello';
 
 
   }

@@ -14,6 +14,10 @@ var patentController = require('../controllers/patentController.js');
 var clientController = require('../controllers/clientController.js');
 var eventController  = require('../controllers/eventController.js');
 var authController = require('../controllers/authController.js');
+var emailTemplateController = require('../controllers/emailTemplateController.js');
+var invoiceTemplateController = require('../controllers/invoiceTemplateController.js');
+
+
 var userExists = function(req,res,next){
   if(!req.payload || !req.payload.email){
     next(new Error('400 Invalid Request'));
@@ -66,5 +70,19 @@ router.post('/clients', auth, userExists, isAdmin,clientController.createClient)
 router.put('/clients/:clientid', auth, userExists, isAdmin,clientController.updateClient);
 // Delete an existing client
 router.delete('/clients', auth, userExists, isAdmin, clientController.deleteClient);
+
+// define api routes for email templates
+router.get('/patents/:patentid/email/:emailtemplateid', emailTemplateController.populateEmailTemplate);
+router.get('/emailTemplates', emailTemplateController.listAllEmailTemplates);
+router.post('/emailTemplates', emailTemplateController.addEmailTemplate);
+router.put('/emailTemplates/email/:emailtemplateid', emailTemplateController.updateEmailTemplate);
+router.delete('/emailTemplates/email/:emailtemplateid', emailTemplateController.deleteEmailTemplate);
+
+// define api routes for invoice templates
+router.get('/patents/:patentid/invoice/:invoicename', invoiceTemplateController.populateInvoiceTemplate);
+router.get('/invoices', invoiceTemplateController.listAllInvoiceTemplates);
+router.post('/invoices', invoiceTemplateController.addInvoiceTemplate);
+router.delete('/invoices/:invoicename', invoiceTemplateController.deleteInvoiceTemplate);
+
 
 module.exports = router;

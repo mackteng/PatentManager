@@ -1,0 +1,48 @@
+<div class="row" style="padding-top:10px">
+  <div class="col-xs-3">
+    <table class="table table-bordered table-striped" style="border:2px solid black;margin-left:15px;">
+      <thead>
+        <tr>
+          <th>FieldID</th>
+          <th>Values</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="(key,val) in vm.testEvent">
+          <td>{{key}}</td>
+          <td>{{val}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="col-xs-4">
+    <div class="panel panel-default" style="padding-bottom:10px">
+        <div class="panel-body">
+            <h4>Upload Invoice Template</h4>
+            <button class="btn btn-info" type="file" ngf-select="vm.uploadFile($file, $invalidFiles)"> Select File</button>
+            <span class="progress" ng-show="vm.f.progress >= 0">
+              <div style="width:{{vm.f.progress}}%"  ng-bind="vm.f.progress + '%'"></div>
+            </span>
+        </div>
+      </div>
+  </div>
+
+  <div class="col-xs-4">
+    <div class="panel panel-default" style="padding-bottom:10px">
+        <div class="panel-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th> Template Name </th>
+                </tr>
+                <tbody>
+                  <tr ng-repeat="invoice in vm.invoices">
+                    <td><a href="uploads/{{invoice}}">{{invoice}}</a></td>
+                  </tr>
+                </tbody>
+            </table>
+        </div>
+      </div>
+  </div>
+</div>

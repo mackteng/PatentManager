@@ -13,7 +13,7 @@ var models = require('./api/models');
 var api = require('./api/routes/index');
 // require strategy
 require('./api/config/passport');
-require('./services/notification/notification.js'); 
+require('./services/notification/notification.js');
 
 var app = express();
 
@@ -24,6 +24,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static('public/'));
+app.use('/uploads', express.static('uploads/'));
 app.use(passport.initialize());
 app.use('/api', api);
 
@@ -40,8 +41,8 @@ app.use(function(req, res, next) {
 // will print stacktrace
 if (app.get('env') === 'development') {
   app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
     console.log(err);
+    res.status(err.status || 500);
     res.json(err);
   });
 }
@@ -49,8 +50,8 @@ if (app.get('env') === 'development') {
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
   console.log(err);
+  res.status(err.status || 500);
   res.json(err);
 });
 

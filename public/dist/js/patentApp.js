@@ -1,4 +1,4 @@
-angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar','angularjs-dropdown-multiselect', 'ui.grid','ui.grid.pagination','ui.grid.resizeColumns']);
+angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar','angularjs-dropdown-multiselect', 'ui.grid','ui.grid.pagination','ui.grid.resizeColumns','ngFileUpload']);
 ;angular
   .module('patentApp')
   .factory('authentication', ['$window', 'config', '$http', authentication]);
@@ -171,6 +171,43 @@ function eventService($http, config, authentication){
 }
 ;angular
   .module('patentApp')
+  .factory('invoiceService', ['$http', 'config', 'authentication', invoiceService]);
+
+function invoiceService($http, config, authentication){
+
+  var baseUrl = config.baseUrl;
+
+  var invoiceService = {};
+
+  invoiceService.listAllInvoices = function(){
+    return $http.get(baseUrl + '/invoices', {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  };
+
+  invoiceService.deleteInvoice = function(invoiceId){
+    return $http.delete(baseUrl + '/invoices/' + invoiceId, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  }
+
+  invoiceService.populateInvoice = function(invoiceId){
+    return $http.get(baseUrl + '/invoices/' + invoiceId, {complete : true}, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  }
+
+
+  return invoiceService;
+}
+;angular
+  .module('patentApp')
   .controller('calendarController', calendarController);
 
 calendarController.$inject=['allEvents'];
@@ -327,7 +364,9 @@ function newClientFormController($uibModalInstance, clientService){
   .module('patentApp')
   .controller('patentEmailTemplateController', patentEmailTemplateController);
 
-  function patentEmailTemplateController(){
+  patentEmailTemplateController.$inject=['$sce']
+
+  function patentEmailTemplateController($sce){
     var vm = this;
     vm.testEvent = {
       "status": "Active",
@@ -345,9 +384,53 @@ function newClientFormController($uibModalInstance, clientService){
       "Comment": "",
       "applicationType": "REG"
     };
+    vm.gmailURL = $sce.trustAsResourceUrl("http://mail.google.com/mail/?compose=1&view=cm&fs=1");
+    vm.populatedBody = 'hello';
 
 
+  }
+;angular
+  .module('patentApp')
+  .controller('patentInvoiceTemplateController', patentInvoiceTemplateController);
+  patentInvoiceTemplateController.$inject=['Upload', 'invoices'];
 
+  function patentInvoiceTemplateController(Upload, invoices){
+    var vm = this;
+    vm.invoices = invoices.data;
+    vm.testEvent = {
+      "status": "Active",
+      "patentExpirationDate": "",
+      "patentType": "Patent",
+      "filingDate": "2015-05-13T00:00:00",
+      "filingNumber": "104115268",
+      "country": "TW",
+      "issueNumber": "",
+      "clientId": "6101",
+      "chineseTitle": "電磁元件及其線圈結構",
+      "docketNumber": 105,
+      "clientDocketNumber": "RD-101007-TW-1-D1",
+      "publicationDate": "",
+      "Comment": "",
+      "applicationType": "REG"
+    };
+
+    vm.uploadFile = function(file){
+      vm.f = file;
+      if(file){
+          file.upload = Upload.upload({
+            url: 'api/invoices',
+            data: {file: file}
+          })
+          file.upload.then(function (response) {
+                vm.invoices.push(file.name);
+            }, function (response) {
+                if (response.status > 0)
+                    vm.errorMsg = response.status + ': ' + response.data;
+            }, function (evt) {
+                file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
+            });
+      }
+    };
 
   }
 ;angular.module('patentApp').controller('newPatentFormController', newPatentFormController);
@@ -429,7 +512,6 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
   vm.submit = function(){
     console.log(vm.patent);
     vm.patent.patentType = 'Patent';
-    vm.patent.litronDocketNumber = vm.patent.clientId+'.'+vm.patent.docketNumber+'.'+vm.patent.country.toUpperCase();
     patentService
       .addNewPatent(vm.patent)
       .success(function(data){
@@ -690,10 +772,6 @@ function patentController(allPatents, allClients, $uibModal){
     return str;
   }
 
-  for(var i = 0; i < vm.patents.length; i++){
-    vm.patents[i].litronDocketNumber = vm.patents[i].clientId+'.'+pad(vm.patents[i].docketNumber.toString())+'.'+vm.patents[i].country.toUpperCase();
-  }
-
   vm.gridOptions = {
     enableFiltering: true,
     data: vm.patents,
@@ -873,6 +951,15 @@ function routeConfig($stateProvider, $urlRouterProvider){
         controller: 'patentEmailTemplateController',
         controllerAs: 'vm'
       })
+      .state('invoiceTemplates', {
+        url:'/invoiceTemplates',
+        templateUrl: 'js/patentInvoiceTemplate/patentInvoiceTemplate.html',
+        controller: 'patentInvoiceTemplateController',
+        controllerAs: 'vm',
+        resolve:{
+          invoices: allInvoices
+        }
+      })
       .state('login', {
           url: '/login',
           templateUrl: 'js/auth/login/login.html',
@@ -892,6 +979,11 @@ angular
           }
       });
   }]);
+
+allInvoices.$inject=['invoiceService'];
+function allInvoices(invoiceService){
+  return invoiceService.listAllInvoices();
+}
 
 allEvents.$inject=['eventService'];
 function allEvents(eventService){
