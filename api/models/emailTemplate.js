@@ -2,6 +2,10 @@ var mongoose = require('mongoose');
 var format = require("string-template")
 
 var emailTemplateSchema = new mongoose.Schema({
+  name: {
+      type: String,
+      required: true
+  },
   subject:{
     type: String,
     required: true
@@ -14,8 +18,13 @@ var emailTemplateSchema = new mongoose.Schema({
 
 emailTemplateSchema.methods.populateTemplate = function(patent){
   var subject = format(this.subject, patent);
-  var content = format(this.subject, patent);
-  return 'https://mail.google.com/mail/u/0/?compose=1&view=cm&fs=1&tf=1' + '&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(content);
+  var content = format(this.content, patent);
+  var url = 'http://mail.google.com/mail/u/0/?compose=1&view=cm&fs=1&tf=1'
+              + '&su='
+              + encodeURIComponent(subject)
+              + '&body='
+              + encodeURIComponent(content);
+  return url;
 }
 
 mongoose.model('emailTemplate', emailTemplateSchema);

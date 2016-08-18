@@ -2,9 +2,9 @@ angular
   .module('patentApp')
   .controller('patentDetailsController', patentDetailsController);
 
-patentDetailsController.$inject = ['$state','$scope','$stateParams', '$uibModal', 'patent', 'eventHistory', 'eventService', 'patentService', 'invoiceService'];
+patentDetailsController.$inject = ['$state','$scope','$stateParams', '$uibModal', 'patent', 'eventHistory', 'eventService', 'patentService', 'invoiceService','emailTemplateService'];
 
-function patentDetailsController($state, $scope, $stateParams, $uibModal, patent, eventHistory, eventService, patentService, invoiceService){
+function patentDetailsController($state, $scope, $stateParams, $uibModal, patent, eventHistory, eventService, patentService, invoiceService, emailTemplateService){
   var vm = this;
   vm.patents = patent.allPatents;
   vm.patent = null;
@@ -240,6 +240,24 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
       resolve:{
           allInvoices : function(){
             return invoiceService.listAllInvoices();
+          },
+          patentId: function(){
+            return vm.patent._id;
+          }
+      }
+    });
+  }
+
+  vm.notify = function(){
+    var modalInstance = $uibModal.open({
+      templateUrl: 'js/patentManager/emailMenu.html',
+      size: 'small',
+      backdrop : 'static',
+      controller: 'emailMenuController',
+      controllerAs: 'vm',
+      resolve:{
+          allTemplates : function(){
+            return emailTemplateService.listAllEmailTemplates();
           },
           patentId: function(){
             return vm.patent._id;

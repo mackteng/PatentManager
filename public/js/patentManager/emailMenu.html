@@ -1,0 +1,15 @@
+<div class="panel panel-default" style="padding-bottom:10px">
+    <div class="panel-body">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th> Template Name </th>
+            </tr>
+            <tbody>
+              <tr ng-repeat="template in vm.templates">
+                <td><a ng-click="vm.dismiss()" href="api/patents/{{vm.patentId}}/email/{{template._id}}">{{template.name}}</a></td>
+              </tr>
+            </tbody>
+        </table>
+    </div>
+  </div>

@@ -15,45 +15,70 @@
       </tbody>
     </table>
   </div>
-  <div class="col-xs-4">
-    <div class="box box-primary" style="border-top:0px">
-      <div class="box-header with-border">
-        <h3 class="box-title">Template Message</h3>
-      </div>
-      <!-- /.box-header -->
-      <div class="box-body">
-        <div class="form-group">
-          <input class="form-control" placeholder="Subject:" ng-model="vm.templateSubject">
+  <div class="col-xs-6">
+    <div class="row">
+      <div class="col-xs-12">
+        <div class="box box-primary" style="border-top:0px;">
+          <div class="box-header with-border">
+            <h3 class="box-title">Template Message</h3>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="form-group">
+              <input class="form-control" placeholder="Template Name" ng-model="vm.templateName">
+            </div>
+            <div class="form-group">
+              <input class="form-control" placeholder="Subject:" ng-model="vm.templateSubject" ng-change="vm.populatedSubject = vm.template(vm.templateSubject, vm.testEvent);">
+            </div>
+            <div class="form-group">
+                  <textarea id="compose-textarea" class="form-control" style="height: 250px; resize: vertical" ng-model="vm.templateBody" ng-change="vm.populatedBody = vm.template(vm.templateBody, vm.testEvent);">
+                    Template Email
+                  </textarea>
+            </div>
+            <button class="btn btn-primary col-xs-12" ng-click="vm.saveTemplate()"> Save </button>
+          </div>
+          <!-- /.box-body -->
+          <!-- /.box-footer -->
         </div>
-        <div class="form-group">
-              <textarea id="compose-textarea" class="form-control" style="height: 300px" ng-model="vm.templateBody">
-                Template Email
-              </textarea>
-        </div>
+        <!-- /. box -->
       </div>
-      <!-- /.box-body -->
-      <!-- /.box-footer -->
+      <div class="col-xs-12">
+        <div class="box box-primary" style="border-top:0px">
+          <div class="box-header with-border">
+            <h3 class="box-title">Populated Message</h3>
+          </div>
+          <!-- /.box-header -->
+          <div class="box-body">
+            <div class="form-group">
+              <input class="form-control" placeholder="Subject:" ng-model="vm.populatedSubject">
+            </div>
+            <div class="form-group">
+                  <textarea id="compose-textarea" class="form-control" style="height: 250px" ng-model="vm.populatedBody">
+                  </textarea>
+            </div>
+          </div>
+          <!-- /.box-body -->
+          <!-- /.box-footer -->
+        </div>
+        <!-- /. box -->
+      </div>
     </div>
-    <!-- /. box -->
   </div>
-  <div class="col-xs-4">
-    <div class="box box-primary" style="border-top:0px">
-      <div class="box-header with-border">
-        <h3 class="box-title">Populated Message</h3>
-      </div>
-      <!-- /.box-header -->
-      <div class="box-body">
-        <div class="form-group">
-          <input class="form-control" placeholder="Subject:" ng-model="vm.populatedSubject">
+  <div class="col-xs-3">
+    <div class="panel panel-default" style="padding-bottom:10px">
+        <div class="panel-body">
+            <table class="table table-bordered">
+              <thead>
+                <tr>
+                  <th> Template Name </th>
+                </tr>
+                <tbody>
+                  <tr ng-repeat="template in vm.emailTemplates">
+                    <td><a href="" ng-click="vm.loadTemplate($index)">{{template.name}}</a></td>
+                  </tr>
+                </tbody>
+            </table>
         </div>
-        <div class="form-group">
-              <textarea id="compose-textarea" class="form-control" style="height: 300px" ng-model="vm.populatedBody">
-              </textarea>
-        </div>
       </div>
-      <!-- /.box-body -->
-      <!-- /.box-footer -->
-    </div>
-    <!-- /. box -->
   </div>
 </div>

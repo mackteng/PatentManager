@@ -120,6 +120,42 @@ angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calend
 });
 ;angular
   .module('patentApp')
+  .factory('emailTemplateService', ['$http', 'config', 'authentication', emailTemplateService]);
+
+function emailTemplateService($http, config, authentication){
+
+  var baseUrl = config.baseUrl;
+
+  var emailTemplateService = {};
+
+  emailTemplateService.listAllEmailTemplates = function(){
+    return $http.get(baseUrl + '/emailTemplates', {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  };
+
+  emailTemplateService.addEmailTemplate = function(template){
+    return $http.post(baseUrl + '/emailTemplates', template, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  };
+
+  emailTemplateService.deleteEmailTemplate = function(emailTemplateId){
+    return $http.delete(baseUrl + '/emailTemplates/' + emailTemplateId, {
+      headers:{
+          Authorization: 'Bearer ' + authentication.getToken()
+      }
+    });
+  }
+
+  return emailTemplateService;
+}
+;angular
+  .module('patentApp')
   .factory('eventService', ['$http', 'config', 'authentication', eventService]);
 
 function eventService($http, config, authentication){
@@ -367,11 +403,47 @@ function newClientFormController($uibModalInstance, clientService){
   .module('patentApp')
   .controller('patentEmailTemplateController', patentEmailTemplateController);
 
-  patentEmailTemplateController.$inject=['$sce']
+  patentEmailTemplateController.$inject=['$scope', 'emailTemplates', 'emailTemplateService'];
+  var nargs = /\{([0-9a-zA-Z_]+)\}/g
+  function template(string) {
+    var args
 
-  function patentEmailTemplateController($sce){
+    if (arguments.length === 2 && typeof arguments[1] === "object") {
+        args = arguments[1]
+    } else {
+        args = new Array(arguments.length - 1)
+        for (var i = 1; i < arguments.length; ++i) {
+            args[i - 1] = arguments[i]
+        }
+    }
+
+    if (!args || !args.hasOwnProperty) {
+        args = {}
+    }
+
+    return string.replace(nargs, function replaceArg(match, i, index) {
+        var result
+
+        if (string[index - 1] === "{" &&
+            string[index + match.length] === "}") {
+            return i
+        } else {
+            result = args.hasOwnProperty(i) ? args[i] : null
+            if (result === null || result === undefined) {
+                return ""
+            }
+
+            return result
+        }
+    })
+  }
+
+  function patentEmailTemplateController($scope, emailTemplates, emailTemplateService){
     var vm = this;
+    vm.template = template;
+    vm.emailTemplates = emailTemplates.data;
     vm.testEvent = {
+      "litronDocketNumber" : "6102.012US",
       "status": "Active",
       "patentExpirationDate": "",
       "patentType": "Patent",
@@ -394,9 +466,28 @@ function newClientFormController($uibModalInstance, clientService){
       "clientRepChineseName": "陳世偉",
       "clientRepEnglishName": "Gary"
     };
-    vm.gmailURL = $sce.trustAsResourceUrl("http://mail.google.com/mail/?compose=1&view=cm&fs=1");
-    vm.populatedBody = 'hello';
-
+    vm.populatedBody = 'Start typing in your template';
+    vm.loadTemplate = function($index){
+      vm.templateName = vm.emailTemplates[$index].name;
+      vm.templateSubject = vm.emailTemplates[$index].subject;
+      vm.templateBody = vm.emailTemplates[$index].content;
+    }
+    vm.saveTemplate = function(){
+      var temp = {
+        name: vm.templateName,
+        subject: vm.templateSubject,
+        content: vm.templateBody
+      };
+      emailTemplateService
+        .addEmailTemplate(temp)
+        .success(function(template){
+          vm.emailTemplates.push(temp);
+        })
+        .error(function(err){
+          alert(err);
+          console.log(err);
+        });
+    }
 
   }
 ;angular
@@ -449,6 +540,19 @@ function newClientFormController($uibModalInstance, clientService){
       }
     };
 
+  }
+;angular
+  .module('patentApp')
+  .controller('emailMenuController', emailMenuController);
+
+  emailMenuController.$inject=['$uibModalInstance','allTemplates','patentId'];
+  function emailMenuController($uibModalInstance, allTemplates, patentId){
+    var vm = this;
+    vm.templates = allTemplates.data;
+    vm.patentId = patentId;
+    vm.dismiss = function(){
+      $uibModalInstance.dismiss('cancel');
+    }
   }
 ;angular
   .module('patentApp')
@@ -561,9 +665,9 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
   .module('patentApp')
   .controller('patentDetailsController', patentDetailsController);
 
-patentDetailsController.$inject = ['$state','$scope','$stateParams', '$uibModal', 'patent', 'eventHistory', 'eventService', 'patentService', 'invoiceService'];
+patentDetailsController.$inject = ['$state','$scope','$stateParams', '$uibModal', 'patent', 'eventHistory', 'eventService', 'patentService', 'invoiceService','emailTemplateService'];
 
-function patentDetailsController($state, $scope, $stateParams, $uibModal, patent, eventHistory, eventService, patentService, invoiceService){
+function patentDetailsController($state, $scope, $stateParams, $uibModal, patent, eventHistory, eventService, patentService, invoiceService, emailTemplateService){
   var vm = this;
   vm.patents = patent.allPatents;
   vm.patent = null;
@@ -807,6 +911,24 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
     });
   }
 
+  vm.notify = function(){
+    var modalInstance = $uibModal.open({
+      templateUrl: 'js/patentManager/emailMenu.html',
+      size: 'small',
+      backdrop : 'static',
+      controller: 'emailMenuController',
+      controllerAs: 'vm',
+      resolve:{
+          allTemplates : function(){
+            return emailTemplateService.listAllEmailTemplates();
+          },
+          patentId: function(){
+            return vm.patent._id;
+          }
+      }
+    });
+  }
+
   vm.delete = function(){
     if(!vm.editEnabled) return;
     patentService
@@ -1012,7 +1134,10 @@ function routeConfig($stateProvider, $urlRouterProvider){
         url:'/emailTemplates',
         templateUrl: 'js/patentEmailTemplate/patentEmailTemplate.html',
         controller: 'patentEmailTemplateController',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        resolve:{
+          emailTemplates : emailTemplates
+        }
       })
       .state('invoiceTemplates', {
         url:'/invoiceTemplates',
@@ -1042,6 +1167,11 @@ angular
           }
       });
   }]);
+
+emailTemplates.$inject=['emailTemplateService'];
+function emailTemplates(emailTemplateService){
+  return emailTemplateService.listAllEmailTemplates();
+}
 
 allInvoices.$inject=['invoiceService'];
 function allInvoices(invoiceService){

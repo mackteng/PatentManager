@@ -20,7 +20,6 @@ module.exports.populateInvoiceTemplate = function(req,res){
 		.findById(req.params.patentid)
 		.populate('clientId')
 		.exec(function(err, patent){
-			console.log(patent);
 			if(err){
 				return sendJsonResponse(res, err, 400);
 			}
