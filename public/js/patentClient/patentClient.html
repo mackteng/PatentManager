@@ -10,17 +10,19 @@
           <table id="example1" class="table table-bordered table-striped">
             <thead>
             <tr>
-              <th class="col-xs-1">Chinese Name</th>
-              <th class="col-xs-1">English Name</th>
+              <th class="col-xs-1">Client ID</th>
+              <th class="col-xs-2">Chinese Name</th>
+              <th class="col-xs-2">English Name</th>
               <th class="col-xs-2">Chinese Address</th>
               <th class="col-xs-2">English Address</th>
-              <th class="col-xs-2">Telephone</th>
-              <th class="col-xs-4">Comments</th>
+              <th class="col-xs-1">Telephone</th>
+              <th class="col-xs-3">Comments</th>
             </tr>
             </thead>
             <tbody>
             <tr ng-repeat='client in vm.clients'>
-              <td><a href="#/clients/{{client._id}}">{{client.chineseName}}</a></td>
+              <td><a href="#/clients/{{client._id}}">{{client._id}}</a></td>
+              <td>{{client.chineseName}}</td>
               <td>{{client.englishName}}</td>
               <td>{{client.chineseAddress}}</td>
               <td>{{client.englishAddress}}</td>
