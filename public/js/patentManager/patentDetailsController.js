@@ -2,9 +2,9 @@ angular
   .module('patentApp')
   .controller('patentDetailsController', patentDetailsController);
 
-patentDetailsController.$inject = ['$scope','$stateParams', '$uibModal', 'patent', 'eventHistory', 'eventService', 'patentService', 'invoiceService'];
+patentDetailsController.$inject = ['$state','$scope','$stateParams', '$uibModal', 'patent', 'eventHistory', 'eventService', 'patentService', 'invoiceService'];
 
-function patentDetailsController($scope, $stateParams, $uibModal, patent, eventHistory, eventService, patentService, invoiceService){
+function patentDetailsController($state, $scope, $stateParams, $uibModal, patent, eventHistory, eventService, patentService, invoiceService){
   var vm = this;
   vm.patents = patent.allPatents;
   vm.patent = null;
@@ -247,6 +247,19 @@ function patentDetailsController($scope, $stateParams, $uibModal, patent, eventH
       }
     });
   }
+
+  vm.delete = function(){
+    if(!vm.editEnabled) return;
+    patentService
+      .deletePatent(vm.patent._id)
+      .success(function(){
+        patentService.markUpdated();
+        $state.go('manage', {}, { reload: true });
+      })
+      .error(function(err){
+        alert('Could not delete');
+      });
+  };
 
 
 }

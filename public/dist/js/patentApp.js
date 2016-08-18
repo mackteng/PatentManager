@@ -561,9 +561,9 @@ function newPatentFormController($uibModalInstance,  allClients, patentService){
   .module('patentApp')
   .controller('patentDetailsController', patentDetailsController);
 
-patentDetailsController.$inject = ['$scope','$stateParams', '$uibModal', 'patent', 'eventHistory', 'eventService', 'patentService', 'invoiceService'];
+patentDetailsController.$inject = ['$state','$scope','$stateParams', '$uibModal', 'patent', 'eventHistory', 'eventService', 'patentService', 'invoiceService'];
 
-function patentDetailsController($scope, $stateParams, $uibModal, patent, eventHistory, eventService, patentService, invoiceService){
+function patentDetailsController($state, $scope, $stateParams, $uibModal, patent, eventHistory, eventService, patentService, invoiceService){
   var vm = this;
   vm.patents = patent.allPatents;
   vm.patent = null;
@@ -807,6 +807,19 @@ function patentDetailsController($scope, $stateParams, $uibModal, patent, eventH
     });
   }
 
+  vm.delete = function(){
+    if(!vm.editEnabled) return;
+    patentService
+      .deletePatent(vm.patent._id)
+      .success(function(){
+        patentService.markUpdated();
+        $state.go('manage', {}, { reload: true });
+      })
+      .error(function(err){
+        alert('Could not delete');
+      });
+  };
+
 
 }
 ;angular.module('patentApp').controller('patentController', patentController);
@@ -926,7 +939,7 @@ function patentService($http, config, authentication){
       }
     });
   }
-  patentService.deletePatent = function(patent, patentid){
+  patentService.deletePatent = function(patentid){
     return $http.delete(baseUrl + 'patents/' + patentid, {
       headers:{
           Authorization: 'Bearer ' + authentication.getToken()

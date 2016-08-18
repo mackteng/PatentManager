@@ -44,7 +44,7 @@ function patentService($http, config, authentication){
       }
     });
   }
-  patentService.deletePatent = function(patent, patentid){
+  patentService.deletePatent = function(patentid){
     return $http.delete(baseUrl + 'patents/' + patentid, {
       headers:{
           Authorization: 'Bearer ' + authentication.getToken()
