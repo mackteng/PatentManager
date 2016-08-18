@@ -27,7 +27,7 @@ def splitCountryType(str):
 def isChinese(title):
     return False
 
-table = ["clientId", "docketNumber", "clientDocketNumber", "chineseTitle", "country", "applicationType", "filingDate", "filingNumber", "publicationDate", "issueNumber", "patentExpirationDate", "Comment"];
+table = ["clientId", "docketNumber", "clientDocketNumber", "title", "country", "applicationType", "filingDate", "filingNumber", "publicationDate", "issueNumber", "patentExpirationDate", "Comment"];
 
 
 #read in filename from command line
@@ -51,6 +51,16 @@ for row in reader:
       base['filingDate'] = datetime.strptime(base['filingDate'], '%m-%d-%y').isoformat()
   except:
       base['filingDate'] = datetime.strptime(base['filingDate'], '%Y/%m/%d').isoformat()
+  else:
+      pass
+
+  try:
+    base['title'].decode('ascii')
+  except UnicodeEncodeError:
+    base['chineseTitle'] = base['title']
+  else:
+    base['englishTitle'] = base['title']
+
   #result.write(json.dumps(base, ensure_ascii=False, indent=4))
   jsonData =  json.dumps(base, ensure_ascii=False, indent=4)
   print jsonData
