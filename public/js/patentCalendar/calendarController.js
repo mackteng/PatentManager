@@ -12,11 +12,16 @@ function calendarController(allEvents){
     calendar:{
       height:800,
       header:{
-          left: 'month basicWeek basicDay',
+          left: 'month',
           center: 'title',
           right: 'today prev,next'
-        }
+      },
+      timeFormat: ''
     }
+  }
+
+  for(var i = 0; i < vm.events.length; i++){
+    vm.events[i].eventDeadline = (new Date(vm.events[i].eventDeadline)).toLocaleDateString();
   }
 
   // populate events
@@ -26,9 +31,32 @@ function calendarController(allEvents){
         {
             title : vm.events[i].eventName,
             start : new Date(vm.events[i].eventDeadline),
-            url   : '#/manage/' + vm.events[i].patentID
+            url   : '#/manage/' + vm.events[i].patentID,
+            allDay: true
         }
       );
     }
   }
+
+  vm.gridOptions = {
+    enableFiltering: true,
+    data: vm.events,
+    enablePaginationControls: true,
+    paginationPageSizes: [25, 50, 75],
+    paginationPageSize: 25,
+    rowHeight:50,
+    enableGridMenu: true,
+    exporterMenuCsv: true,
+    exporterMenuPdf: false,
+    exporterOlderExcelCompatibility: true,
+    columnDefs:[
+      {field: 'eventName.split(" ")[2]', displayName: 'Type'},
+      {field: 'eventName.split(" ")[0]', displayName: 'Docket Number'},
+      {field: 'eventDeadline', displayName: 'Deadline', cellFilter: 'date'}
+    ]
+  };
+
+
+
+
 }

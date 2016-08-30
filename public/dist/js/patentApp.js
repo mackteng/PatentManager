@@ -1,4 +1,4 @@
-angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar','angularjs-dropdown-multiselect', 'ui.grid','ui.grid.pagination','ui.grid.resizeColumns','ngFileUpload']);
+angular.module('patentApp',['ui.bootstrap', 'ui.router', 'ngCookies', 'ui.calendar','angularjs-dropdown-multiselect', 'ui.grid','ui.grid.pagination','ui.grid.exporter', 'ui.grid.resizeColumns','ngFileUpload']);
 ;angular
   .module('patentApp')
   .factory('authentication', ['$window', 'config', '$http', authentication]);
@@ -256,11 +256,16 @@ function calendarController(allEvents){
     calendar:{
       height:800,
       header:{
-          left: 'month basicWeek basicDay',
+          left: 'month',
           center: 'title',
           right: 'today prev,next'
-        }
+      },
+      timeFormat: ''
     }
+  }
+
+  for(var i = 0; i < vm.events.length; i++){
+    vm.events[i].eventDeadline = (new Date(vm.events[i].eventDeadline)).toLocaleDateString();
   }
 
   // populate events
@@ -270,11 +275,34 @@ function calendarController(allEvents){
         {
             title : vm.events[i].eventName,
             start : new Date(vm.events[i].eventDeadline),
-            url   : '#/manage/' + vm.events[i].patentID
+            url   : '#/manage/' + vm.events[i].patentID,
+            allDay: true
         }
       );
     }
   }
+
+  vm.gridOptions = {
+    enableFiltering: true,
+    data: vm.events,
+    enablePaginationControls: true,
+    paginationPageSizes: [25, 50, 75],
+    paginationPageSize: 25,
+    rowHeight:50,
+    enableGridMenu: true,
+    exporterMenuCsv: true,
+    exporterMenuPdf: false,
+    exporterOlderExcelCompatibility: true,
+    columnDefs:[
+      {field: 'eventName.split(" ")[2]', displayName: 'Type'},
+      {field: 'eventName.split(" ")[0]', displayName: 'Docket Number'},
+      {field: 'eventDeadline', displayName: 'Deadline', cellFilter: 'date'}
+    ]
+  };
+
+
+
+
 }
 ;angular
   .module('patentApp')
@@ -972,6 +1000,10 @@ function patentController(allPatents, allClients, $uibModal){
   vm.patents = allPatents.data;
   vm.clients = allClients.data;
 
+  for(var i = 0; i < vm.patents.length; i++){
+    vm.patents[i].filingDate = (new Date(vm.patents[i].filingDate)).toLocaleDateString();
+  }
+
   function pad(str){
     while(str.length < 3) str = '0' + str;
     return str;
@@ -984,6 +1016,9 @@ function patentController(allPatents, allClients, $uibModal){
     paginationPageSizes: [25, 50, 75],
     paginationPageSize: 25,
     rowHeight:50,
+    enableGridMenu: true,
+    exporterMenuCsv: true,
+    exporterMenuPdf: false,
     columnDefs:[
       {field: 'litronDocketNumber', displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
       {field: 'clientDocketNumber', displayName: 'Client Docket Number'},

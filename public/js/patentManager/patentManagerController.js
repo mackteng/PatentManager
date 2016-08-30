@@ -6,6 +6,10 @@ function patentController(allPatents, allClients, $uibModal){
   vm.patents = allPatents.data;
   vm.clients = allClients.data;
 
+  for(var i = 0; i < vm.patents.length; i++){
+    vm.patents[i].filingDate = (new Date(vm.patents[i].filingDate)).toLocaleDateString();
+  }
+
   function pad(str){
     while(str.length < 3) str = '0' + str;
     return str;
@@ -18,6 +22,9 @@ function patentController(allPatents, allClients, $uibModal){
     paginationPageSizes: [25, 50, 75],
     paginationPageSize: 25,
     rowHeight:50,
+    enableGridMenu: true,
+    exporterMenuCsv: true,
+    exporterMenuPdf: false,
     columnDefs:[
       {field: 'litronDocketNumber', displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
       {field: 'clientDocketNumber', displayName: 'Client Docket Number'},
