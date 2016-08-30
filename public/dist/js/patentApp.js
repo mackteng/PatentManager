@@ -713,6 +713,8 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
   vm.listCountries = ['US', 'TW', 'CN', 'JP', 'KR', 'EP'];
   // application Types
   vm.applicationTypes = ['REG', 'DIV', 'CA', 'CIP', 'PRO'];
+  // event Types
+  vm.eventTypes = ['答辯到期日','答辯到期日(再審查)','答辯到期日(FOA)', '翻譯與分案','優先權期限到期','年費', '核准領證繳費期限'];
   // date pickers
   vm.dateOptions = {};
 

@@ -205,7 +205,9 @@
             <div class="form-group">
               <label class="col-sm-2 control-label">Event</label>
               <div class="col-sm-4">
-                <input class="form-control" ng-model="vm.newEvent.eventName">
+                <select ng-model="vm.newEvent.eventName">
+                  <option ng-repeat="eventType in vm.eventTypes"> {{eventType}} </option>
+                </select>
               </div>
               <label class="col-sm-2 control-label">Deadline Date</label>
               <div class="col-sm-4">
