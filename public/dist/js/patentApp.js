@@ -270,7 +270,7 @@ function calendarController(allEvents){
 
   // populate events
   for(var i = 0; i < vm.events.length; i++){
-    if(vm.events[i].completed == false){
+    if(!vm.events[i].completed){
       vm.eventSources.events.push(
         {
             title : vm.events[i].eventName,
@@ -296,7 +296,13 @@ function calendarController(allEvents){
     columnDefs:[
       {field: 'eventName.split(" ")[2]', displayName: 'Type'},
       {field: 'eventName.split(" ")[0]', displayName: 'Docket Number'},
-      {field: 'eventDeadline', displayName: 'Deadline', cellFilter: 'date'}
+      {field: 'eventDeadline', displayName: 'Deadline', cellFilter: 'date'},
+      {field: 'completed', displayName: 'Completed', filter: {
+          term: false,
+          condition: function(searchTerm, cellValue, row, column){
+            return cellValue === searchTerm;
+          }
+      }}
     ]
   };
 
