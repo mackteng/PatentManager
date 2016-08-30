@@ -2,6 +2,8 @@ var mongoose = require('mongoose');
 var Patent = mongoose.model('Patent');
 var User = mongoose.model('User');
 
+var EventController = require('./eventController.js');
+
 var sendJsonResponse = function(res, payload, status){
 	res.status(status);
 	res.json(payload);
@@ -122,7 +124,11 @@ module.exports.deletePatent = function(req, res){
 	Patent
 		.findByIdAndRemove(req.params.patentid, function(err){
 				if(err){
-					return sendJsonResponse(res, 400, err);
+					return sendJsonResponse(res, err, 400);
+				}
+				err = EventController.deleteEventHistory(req.params.patentid);
+				if(err){
+					return sendJsonResponse(res, err, 400);
 				}
 				sendJsonResponse(res,null,204);
 		});

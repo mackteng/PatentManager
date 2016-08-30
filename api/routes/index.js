@@ -56,6 +56,7 @@ router.delete('/patents/:patentid', auth, userExists, isAdmin, patentController.
 // define api routes for event history
 router.get('/patents/:patentid/events', auth, userExists,eventController.getEventHistory);
 router.post('/patents/:patentid/events', auth, userExists,eventController.addEvent);
+router.delete('/patents/:patentid/events', auth, userExists,eventController.deleteEventHistory);
 
 router.get('/events', auth, userExists, eventController.listAllEvents);
 router.put('/events/:eventid', auth, userExists, eventController.completeEvent);

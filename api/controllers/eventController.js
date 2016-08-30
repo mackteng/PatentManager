@@ -38,6 +38,17 @@ module.exports.getEventHistory = function(req, res){
     });
 };
 
+// delete all events for given patentID
+module.exports.deleteEventHistory = function(patentid){
+  Event
+    .find({
+			patentID: patentid
+		})
+    .remove(function(err){
+      if(err) return err;
+    });
+};
+
 // add Event to Event History Container
 module.exports.addEvent = function(req, res){
   if(!req.params || !req.params.patentid || !mongoose.Types.ObjectId.isValid(req.params.patentid)){
