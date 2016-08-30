@@ -86,7 +86,13 @@ module.exports.addInvoiceTemplate = function(req,res){
 };
 
 module.exports.deleteInvoiceTemplate = function(req,res){
-  if(!req.params || !req.params.Invoicetemplateid){
+  if(!req.params || !req.params.invoicename){
     return sendJsonResponse(res, 'Invalid Request', 400);
   }
+	fs.unlink(__dirname+'/../../uploads/' + req.params.invoicename, function(err){
+			if(err){
+				return sendJsonResponse(res, err, 400);
+			}
+			return sendJsonResponse(res, "Success", 200);
+	});
 };

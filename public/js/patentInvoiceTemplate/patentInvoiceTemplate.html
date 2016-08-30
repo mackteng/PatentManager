@@ -38,7 +38,7 @@
                 </tr>
                 <tbody>
                   <tr ng-repeat="invoice in vm.invoices">
-                    <td><a href="uploads/{{invoice}}">{{invoice}}</a></td>
+                    <td><a href="uploads/{{invoice}}">{{invoice}}</a><a style="float:right;" ng-click="vm.deleteInvoice($index)">Delete</a></td>
                   </tr>
                 </tbody>
             </table>

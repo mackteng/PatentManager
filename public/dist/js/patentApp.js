@@ -539,9 +539,9 @@ function newClientFormController($uibModalInstance, clientService){
 ;angular
   .module('patentApp')
   .controller('patentInvoiceTemplateController', patentInvoiceTemplateController);
-  patentInvoiceTemplateController.$inject=['Upload', 'invoices'];
+  patentInvoiceTemplateController.$inject=['Upload', 'invoices', 'invoiceService'];
 
-  function patentInvoiceTemplateController(Upload, invoices){
+  function patentInvoiceTemplateController(Upload, invoices, invoiceService){
     var vm = this;
     vm.invoices = invoices.data;
     vm.testEvent = {
@@ -584,6 +584,17 @@ function newClientFormController($uibModalInstance, clientService){
                 file.progress = Math.min(100, parseInt(100.0 * evt.loaded / evt.total));
             });
       }
+    };
+
+    vm.deleteInvoice = function($index){
+      invoiceService
+        .deleteInvoice(vm.invoices[$index])
+        .success(function(){
+              vm.invoices.splice($index, 1);
+        })
+        .error(function(err){
+          alert('Unable to delete invoice');
+        });
     };
 
   }
