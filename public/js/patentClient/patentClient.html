@@ -7,29 +7,7 @@
         </div>
         <!-- /.box-header -->
         <div class="box-body">
-          <table id="example1" class="table table-bordered table-striped">
-            <thead>
-            <tr>
-              <th class="col-xs-1">Client ID</th>
-              <th class="col-xs-2">Chinese Name</th>
-              <th class="col-xs-2">English Name</th>
-              <th class="col-xs-2">Chinese Address</th>
-              <th class="col-xs-2">English Address</th>
-              <th class="col-xs-1">Telephone</th>
-              <th class="col-xs-3">Comments</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr ng-repeat='client in vm.clients'>
-              <td><a href="#/clients/{{client._id}}">{{client._id}}</a></td>
-              <td>{{client.chineseName}}</td>
-              <td>{{client.englishName}}</td>
-              <td>{{client.chineseAddress}}</td>
-              <td>{{client.englishAddress}}</td>
-              <td>{{client.telephone}}</td>
-              <td>{{client.comment}}</td>
-            </tr>
-          </tbody>
+          <div ui-grid="vm.gridOptions" ui-grid-pagination ui-grid-resize-columns ng-if="vm.gridOptions" class="myGrid"></div>
         </table>
       </div>
       <!-- /.box-body -->
