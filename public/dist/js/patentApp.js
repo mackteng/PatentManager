@@ -1035,6 +1035,7 @@ function patentController(allPatents, allClients, $uibModal){
     enableGridMenu: true,
     exporterMenuCsv: true,
     exporterMenuPdf: false,
+    exporterOlderExcelCompatibility: true,
     columnDefs:[
       {field: 'litronDocketNumber', width:"10%", displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
       {field: 'clientDocketNumber', width:"10%", displayName: 'Client Docket Number'},
