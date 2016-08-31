@@ -10,7 +10,7 @@ function patentController(allPatents, allClients, $uibModal){
     vm.patents[i].filingDate = (new Date(vm.patents[i].filingDate)).toLocaleDateString();
   }
 
-  function pad(str){
+  vm.pad = function(str){
     while(str.length < 3) str = '0' + str;
     return str;
   }
@@ -26,14 +26,17 @@ function patentController(allPatents, allClients, $uibModal){
     exporterMenuCsv: true,
     exporterMenuPdf: false,
     columnDefs:[
-      {field: 'litronDocketNumber', displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
-      {field: 'clientDocketNumber', displayName: 'Client Docket Number'},
-      {field: 'applicationType', displayName: 'Application Type'},
-      {field: 'country', displayName: 'Country'},
-      {field: 'filingDate', displayName: 'Filing Date', cellFilter: 'date'},
-      {field: 'englishTitle', displayName: 'English Title'},
-      {field: 'chineseTitle', displayName: 'Chinese Title'},
-      {field: 'status', displayName: 'Status'}
+      {field: 'litronDocketNumber', width:"10%", displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
+      {field: 'clientDocketNumber', width:"15%", displayName: 'Client Docket Number'},
+      {field: 'applicationType', width:"5%", displayName: 'Type'},
+      {field: 'country', width:"5%", displayName: 'Country'},
+      {field: 'filingNumber', width: "12%", displayName: 'Application Number'},
+      {field: 'filingDate', width: "8%", displayName: 'Filing Date', cellFilter: 'date'},
+      {field: 'englishTitle', width: "20%", displayName: 'English Title'},
+      {field: 'chineseTitle', width: "20%", displayName: 'Chinese Title'},
+      {field: 'status', width: "5%", displayName: 'Status', filter:{
+        term: 'Active'
+      }}
     ]
   };
 
