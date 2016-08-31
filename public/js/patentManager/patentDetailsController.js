@@ -163,7 +163,7 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
       alert('Must specify deadline');
       return;
     }
-    vm.newComment = vm.newEvent.eventName;
+    vm.newComment = vm.newEvent.eventName + ' ' + vm.newEvent.eventDeadline.toLocaleDateString();
     vm.newEvent.eventName = vm.patent.clientId + '.' + vm.patent.docketNumber + '.' +vm.patent.country.toUpperCase() + ' ' + vm.newEvent.eventName;
     for(var i = 0; i < vm.newEvent.notificationEmails.length; i++){
       vm.newEvent.notificationEmails[i] = vm.newEvent.notificationEmails[i].id;

@@ -21,22 +21,22 @@ function patentController(allPatents, allClients, $uibModal){
     enablePaginationControls: true,
     paginationPageSizes: [25, 50, 75],
     paginationPageSize: 25,
-    rowHeight:50,
     enableGridMenu: true,
     exporterMenuCsv: true,
     exporterMenuPdf: false,
     columnDefs:[
       {field: 'litronDocketNumber', width:"10%", displayName: 'Docket Number', cellTemplate:'<div class="ui-grid-cell-contents">' + '<a href="#/manage/' + '{{row.entity._id}}' + '">' + '{{row.entity.litronDocketNumber}}' + "</a>"},
-      {field: 'clientDocketNumber', width:"15%", displayName: 'Client Docket Number'},
+      {field: 'clientDocketNumber', width:"10%", displayName: 'Client Docket Number'},
       {field: 'applicationType', width:"5%", displayName: 'Type'},
       {field: 'country', width:"5%", displayName: 'Country'},
-      {field: 'filingNumber', width: "12%", displayName: 'Application Number'},
-      {field: 'filingDate', width: "8%", displayName: 'Filing Date', cellFilter: 'date'},
-      {field: 'englishTitle', width: "20%", displayName: 'English Title'},
-      {field: 'chineseTitle', width: "20%", displayName: 'Chinese Title'},
+      {field: 'filingNumber', width: "10%", displayName: 'Application Number'},
+      {field: 'filingDate', width: "10%", displayName: 'Filing Date', cellFilter: 'date'},
+      {field: 'englishTitle', width: "15%", displayName: 'English Title'},
+      {field: 'chineseTitle', width: "15%", displayName: 'Chinese Title'},
       {field: 'status', width: "5%", displayName: 'Status', filter:{
         term: 'Active'
-      }}
+      }},
+      {field: 'comments', width:"15%", displayName: 'Comments', cellTemplate:'<div ng-repeat="item in row.entity[col.field]">{{item}}</div>'}
     ]
   };
 
