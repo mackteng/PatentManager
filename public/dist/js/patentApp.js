@@ -420,15 +420,14 @@ function newClientFormController($uibModalInstance, clientService){
       enablePaginationControls: true,
       paginationPageSizes: [10,20],
       paginationPageSize: 10,
-      rowHeight:50,
       columnDefs:[
-        {field: '_id', displayName: 'ClientID', cellTemplate: '<a href="#/clients/' + '{{row.entity._id}}' + '">' + '{{row.entity._id}}' + '</a>'},
+        {field: '_id', displayName: 'ClientID', width:"5%", cellTemplate: '<a href="#/clients/' + '{{row.entity._id}}' + '">' + '{{row.entity._id}}' + '</a>'},
         {field: 'chineseName', displayName: 'Chinese Name'},
         {field: 'englishName', displayName: 'English Name'},
         {field: 'chineseAddress', displayName: 'Chinese Address'},
         {field: 'englishAddress', displayName: 'English Address'},
         {field: 'telephone', displayName: 'Telephone'},
-        {field: 'comments', displayName: 'Comments'}
+        {field: 'comment', displayName: 'Comments'}
       ]
     };
 

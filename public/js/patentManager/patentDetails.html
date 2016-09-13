@@ -234,7 +234,7 @@
       </uib-accordion>
       <div class="eventTimeline" ng-show="vm.eventHistory && vm.eventHistory.length > 0">
         <uib-accordion close-others="false">
-          <uib-accordion-group ng-repeat="event in vm.eventHistory" ng-disabled="event.completed" is-open="true" heading="{{event.eventName}}      {{event.eventDeadline | date:'MM/dd/yyyy'}}" >
+          <uib-accordion-group ng-repeat="event in vm.eventHistory" ng-disabled="event.completed" panel-class="panel-info" is-open="true" heading="{{event.eventName}}      {{event.eventDeadline | date:'MM/dd/yyyy'}}" >
              <div class="row">
                <label class="col-sm-2">Note:</label>
                <p style="width:100%;display:inline;">{{event.eventNote}}</p>
@@ -249,6 +249,7 @@
              </div>
              <div class="row" style="margin-top:5px">
                <button class="btn-success form-control" ng-show="event.completed" >Completed</button>
+               <button class="btn-info form-control" ng-show="!event.completed" ng-click="vm.updateEvent($index)">Update Event</button>
                <button class="btn-primary form-control" ng-show="!event.completed" ng-click="vm.completeEvent($index)">Complete Event</button>
                <button class="btn-danger form-control"  ng-click="vm.deleteEvent($index)">Delete Event</button>
              </div>
@@ -269,7 +270,7 @@
       </uib-accordion>
       <div class="eventTimeline" ng-show="vm.patent.comments && vm.patent.comments.length > 0">
         <uib-accordion close-others="false">
-          <uib-accordion-group ng-repeat="comment in vm.patent.comments track by $index" is-disabled="true" heading="{{comment}}">
+          <uib-accordion-group ng-repeat="comment in vm.patent.comments track by $index" heading="{{comment}}">
           </uib-accordion-group>
         </uib-accordion>
       </div>
