@@ -277,6 +277,7 @@
       <div class="eventTimeline" ng-show="vm.patent.comments && vm.patent.comments.length > 0">
         <uib-accordion close-others="false">
           <uib-accordion-group ng-repeat="comment in vm.patent.comments track by $index" heading="{{comment}}">
+            <span> <button class="btn btn-danger" ng-click="vm.deleteComment($index)"> Delete </button> </span>
           </uib-accordion-group>
         </uib-accordion>
       </div>

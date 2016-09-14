@@ -842,12 +842,13 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
   vm.save = function(){
     patentService
       .updatePatent(vm.patent, vm.patent._id)
-      .success(function(){
-        angular.copy(vm.patent, vm.oldPatent);
+      .success(function(patent){
+        vm.patent = patent;
+        angular.copy(patent, vm.oldPatent);
         vm.editEnabled = false;
       })
       .error(function(err){
-        alert(err);
+        console.log(err);
       });
   }
 
@@ -965,6 +966,11 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
   vm.addComment = function(){
     vm.patent.comments.unshift(vm.newComment);
     vm.newComment = "";
+    vm.save();
+  }
+
+  vm.deleteComment = function($index){
+    vm.patent.comments.splice($index, 1);
     vm.save();
   }
 
