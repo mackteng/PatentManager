@@ -247,9 +247,15 @@
                <label class="col-sm-2 control-label">Dates:</label>
                <p style="width:100%;display:inline;" ng-repeat="date in event.notificationDates"> {{date | date:"MM/dd/yyyy"}} | </p>
              </div>
+             <div class="row">
+               <label class="col-sm-2 control-label">Notify</label>
+               <div class="col-sm-4" ng-dropdown-multiselect="" options="vm.emailsList" selected-model="event.updatedNotificationEmails" extra-settings="vm.multiSettings"></div>
+               <label class="col-sm-2 control-label">On</label>
+               <div class="col-sm-4" ng-dropdown-multiselect="" options="event.datesList" selected-model="event.updatedNotificationDates" extra-settings="vm.multiSettingsDate"></div>
+             </div>
              <div class="row" style="margin-top:5px">
                <button class="btn-success form-control" ng-show="event.completed" >Completed</button>
-               <button class="btn-info form-control" ng-show="!event.completed" ng-click="vm.updateEvent($index)">Update Event</button>
+               <button class="btn-info form-control" ng-show="!event.completed" ng-click="vm.updateNotification($index)">Update Event</button>
                <button class="btn-primary form-control" ng-show="!event.completed" ng-click="vm.completeEvent($index)">Complete Event</button>
                <button class="btn-danger form-control"  ng-click="vm.deleteEvent($index)">Delete Event</button>
              </div>

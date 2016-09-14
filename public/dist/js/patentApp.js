@@ -188,8 +188,8 @@ function eventService($http, config, authentication){
     });
   }
 
-  eventService.completeEvent = function(eventId){
-    return $http.put(baseUrl + '/events/' + eventId, {complete : true}, {
+  eventService.updateEvent = function(eventId, event){
+    return $http.put(baseUrl + '/events/' + eventId, event, {
       headers:{
           Authorization: 'Bearer ' + authentication.getToken()
       }
@@ -741,7 +741,7 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
       break;
     }
   }
-  // format date
+  // format dates
   vm.patent.filingDate = new Date(vm.patent.filingDate);
   if(vm.patent.publicationDate) vm.patent.publicationDate = new Date(vm.patent.publicationDate);
   if(vm.patent.patentExpirationDate) vm.patent.patentExpirationDate = new Date(vm.patent.patentExpirationDate);
@@ -750,6 +750,36 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
   }
   for(i = 0; i < vm.eventHistory.length; i++){
     vm.eventHistory[i].eventDeadline = new Date(vm.eventHistory[i].eventDeadline);
+  }
+
+  // populate dates for each event
+  for(var i = 0; i < vm.eventHistory.length; i++){
+    vm.eventHistory[i].updatedNotificationEmails = [];
+    vm.eventHistory[i].updatedNotificationDates = [];
+    vm.eventHistory[i].datesList = [];
+    var index = 0;
+
+    // add 1-6 days before
+    for(var j = 1; j <= 6; j++){
+      var date = new Date(vm.eventHistory[i].eventDeadline);
+      date.setDate(date.getDate()-j);
+      vm.eventHistory[i].datesList.push({
+        id: index++,
+        label: j + ' day(s) before',
+        date: date
+      });
+    };
+    // add 1-8 weeks before
+    for(var j = 1; j <= 8; j++){
+      var date = new Date(vm.eventHistory[i].eventDeadline);
+      date.setDate(date.getDate()-(j*7));
+      vm.eventHistory[i].datesList.push({
+        id: index++,
+        label: j + ' week(s) before',
+        date: date
+      });
+    };
+    console.log(vm.eventHistory[i].datesList);
   }
 
 
@@ -837,16 +867,35 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
     notificationEmails:[],
     notificationDates:[]
   };
-  vm.completeEvent = function($index){
+  vm.updateEvent = function($index, cb){
     eventService
-      .completeEvent(vm.eventHistory[$index]._id)
-      .success(function(){
-        vm.eventHistory[$index].completed = true;
-      })
+      .updateEvent(vm.eventHistory[$index]._id, vm.eventHistory[$index])
+      .success(function(){})
       .error(function(err){
-        console.log(err);
+        cb(err);
       })
   }
+
+  vm.updateNotification = function($index){
+    for(var i = 0; i < vm.eventHistory[$index].updatedNotificationDates.length; i++){
+      vm.eventHistory[$index].updatedNotificationDates[i] = vm.eventHistory[$index].updatedNotificationDates[i].id;
+    }
+    for(var i = 0; i < vm.eventHistory[$index].updatedNotificationEmails.length; i++){
+      vm.eventHistory[$index].updatedNotificationEmails[i] = vm.eventHistory[$index].updatedNotificationEmails[i].id;
+    }
+    vm.eventHistory[$index].notificationDates = vm.eventHistory[$index].updatedNotificationDates;
+    vm.eventHistory[$index].notificationEmails = vm.eventHistory[$index].updatedNotificationEmails;
+    vm.updateEvent($index, function(){});
+  }
+
+  vm.completeEvent = function($index){
+    vm.eventHistory[$index].completed = true;
+    vm.updateEvent($index, function(err){
+      console.log(err);
+      vm.eventHistory[$index].completed = false;
+    });
+  }
+
   vm.deleteEvent = function($index){
     eventService
       .deleteEvent(vm.eventHistory[$index]._id)

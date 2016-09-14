@@ -28,7 +28,7 @@ var userExists = function(req,res,next){
 				if(err){
 					next(err);
 				}
-				if(!user || !user.admin){
+				if(!user){
 					next(new Error('401 Not Authorized'));
 				}
         req.user = user;
@@ -53,23 +53,20 @@ router.post('/patents', patentController.createPatent);
 router.put('/patents/:patentid', auth, userExists,patentController.updatePatent);
 router.delete('/patents/:patentid', auth, userExists, isAdmin, patentController.deletePatent);
 
-// define api routes for event history
+// define api routes for events
 router.get('/patents/:patentid/events', auth, userExists,eventController.getEventHistory);
 router.post('/patents/:patentid/events', auth, userExists,eventController.addEvent);
 router.delete('/patents/:patentid/events', auth, userExists,eventController.deleteEventHistory);
 
 router.get('/events', auth, userExists, eventController.listAllEvents);
-router.put('/events/:eventid', auth, userExists, eventController.completeEvent);
+router.put('/events/:eventid', auth, userExists, eventController.updateEvent);
 router.delete('/events/:eventid', auth, userExists, eventController.deleteEvent);
 
 
-// Returns a listing of all clients
+// define api routes for clients
 router.get('/clients', auth, userExists, clientController.listAllClients);
-// Create a new client
 router.post('/clients', auth, userExists, isAdmin,clientController.createClient);
-// Update an existing client
 router.put('/clients/:clientid', auth, userExists, isAdmin,clientController.updateClient);
-// Delete an existing client
 router.delete('/clients', auth, userExists, isAdmin, clientController.deleteClient);
 
 // define api routes for email templates

@@ -32,8 +32,8 @@ function eventService($http, config, authentication){
     });
   }
 
-  eventService.completeEvent = function(eventId){
-    return $http.put(baseUrl + '/events/' + eventId, {complete : true}, {
+  eventService.updateEvent = function(eventId, event){
+    return $http.put(baseUrl + '/events/' + eventId, event, {
       headers:{
           Authorization: 'Bearer ' + authentication.getToken()
       }

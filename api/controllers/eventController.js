@@ -72,22 +72,30 @@ module.exports.addEvent = function(req, res){
 	});
 };
 
-module.exports.completeEvent = function(req, res){
+module.exports.updateEvent = function(req, res){
 	if(!req.params || !req.params.eventid || !mongoose.Types.ObjectId.isValid(req.params.eventid)){
 		return sendJsonResponse(res, "No eventId Specified", 400);
 	}
+
 	Event
 		.findById(req.params.eventid)
 		.exec(function(err, event){
 			if(err){
 				return sendJsonResponse(res, err, 400);
 			}
-			event.completed = true;
-			event.save(function(err){
-				if(err){
-					return sendJsonResponse(res, err, 400);
+			if(!event){
+				return sendJsonResponse(res, "No Such Event Found", 404);
+			}
+			for(var field in Event.schema.paths){
+				if(field != '_id' && field != '_v' && req.body[field]){
+					event[field] = req.body[field];
 				}
-				return sendJsonResponse(res, "Success", 200);
+			}
+			event.save(function(err, event){
+					if(err){
+						return sendJsonResponse(res, err, 400);
+					}
+					sendJsonResponse(res, event, 200);
 			});
 		});
 }
