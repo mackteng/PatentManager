@@ -230,6 +230,7 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
     eventService
       .addEvent(vm.patent._id, vm.newEvent)
       .success(function(event){
+        event.datesList = vm.datesList;
         vm.eventHistory.unshift(event);
         vm.addComment();
         vm.newEvent = {

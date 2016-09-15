@@ -88,7 +88,6 @@ module.exports.updateEvent = function(req, res){
 			}
 			for(var field in Event.schema.paths){
 				if(field != '_id' && field != '_v' && req.body[field]){
-					console.log(field + ',' + req.body[field]);
 					event[field] = req.body[field];
 				}
 			}
