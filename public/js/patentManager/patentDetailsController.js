@@ -17,15 +17,19 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
     }
   }
   // format dates
-  vm.patent.filingDate = new Date(vm.patent.filingDate);
-  if(vm.patent.publicationDate) vm.patent.publicationDate = new Date(vm.patent.publicationDate);
-  if(vm.patent.patentExpirationDate) vm.patent.patentExpirationDate = new Date(vm.patent.patentExpirationDate);
-  for(i = 0; i < vm.patent.priority.length; i++){
-    vm.patent.priority[i].priorityDate = new Date(vm.patent.priority[i].priorityDate);
+  function format(){
+    vm.patent.filingDate = new Date(vm.patent.filingDate);
+    if(vm.patent.publicationDate) vm.patent.publicationDate = new Date(vm.patent.publicationDate);
+    if(vm.patent.patentExpirationDate) vm.patent.patentExpirationDate = new Date(vm.patent.patentExpirationDate);
+    for(i = 0; i < vm.patent.priority.length; i++){
+      vm.patent.priority[i].priorityDate = new Date(vm.patent.priority[i].priorityDate);
+    }
+    for(i = 0; i < vm.eventHistory.length; i++){
+      vm.eventHistory[i].eventDeadline = new Date(vm.eventHistory[i].eventDeadline);
+    }
   }
-  for(i = 0; i < vm.eventHistory.length; i++){
-    vm.eventHistory[i].eventDeadline = new Date(vm.eventHistory[i].eventDeadline);
-  }
+
+  format();
 
   // populate dates for each event
   for(var i = 0; i < vm.eventHistory.length; i++){
@@ -54,7 +58,6 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
         date: date
       });
     };
-    console.log(vm.eventHistory[i].datesList);
   }
 
 
@@ -121,6 +124,7 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
         vm.patent = patent;
         angular.copy(patent, vm.oldPatent);
         vm.editEnabled = false;
+        format();
       })
       .error(function(err){
         console.log(err);
@@ -146,7 +150,9 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
   vm.updateEvent = function($index, cb){
     eventService
       .updateEvent(vm.eventHistory[$index]._id, vm.eventHistory[$index])
-      .success(function(){})
+      .success(function(event){
+        vm.eventHistory[$index] = event;
+      })
       .error(function(err){
         cb(err);
       })
