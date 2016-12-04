@@ -876,6 +876,8 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
     eventService
       .updateEvent(vm.eventHistory[$index]._id, vm.eventHistory[$index])
       .success(function(event){
+        event.updatedNotificationEmails = [];
+        event.updatedNotificationDates = [];
         vm.eventHistory[$index] = event;
       })
       .error(function(err){
@@ -960,6 +962,8 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
       .addEvent(vm.patent._id, vm.newEvent)
       .success(function(event){
         event.datesList = vm.datesList;
+        event.updatedNotificationEmails = [];
+        event.updatedNotificationDates = [];
         vm.eventHistory.unshift(event);
         vm.addComment();
         vm.newEvent = {
