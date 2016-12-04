@@ -66,7 +66,7 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
   // application Types
   vm.applicationTypes = ['REG', 'DIV', 'CA', 'CIP', 'PRO'];
   // event Types
-  vm.eventTypes = ['答辯到期日','答辯到期日(再審查)','答辯到期日(FOA)', '翻譯與分案','優先權期限到期','年費', '核准領證繳費期限'];
+  vm.eventTypes = ['答辯到期日','答辯到期日(再審查)','答辯到期日(FOA)', '回復到期日', 'Missing Part 到期日', '核准領證繳費期限', '優先權期限到期','年費-1', '年費-2','年費-3','年費-4','年費-5','年費-6','年費-7','年費-8', '年費-9'];
   // date pickers
   vm.dateOptions = {};
 
@@ -204,6 +204,10 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
     {
       id:4,
       label: 'wilasato@litron-intl.com'
+    },
+    {
+      id:5,
+      label: 'pattyyu@litron-intl.com'
     }
   ];
   vm.multiSettings = {displayProp: 'label', idProp: 'label'};
@@ -289,6 +293,16 @@ function patentDetailsController($state, $scope, $stateParams, $uibModal, patent
       vm.datesList.push({
         id: index++,
         label: i + ' week(s) before',
+        date: date
+      });
+    };
+    // add 1 - 4 months before
+    for(var i = 1; i <= 4; i++){
+      var date = new Date(current);
+      date.setDate(date.getDate()-(i*30));
+      vm.datesList.push({
+        id: index++,
+        label: i + ' month(s) before',
         date: date
       });
     };
